@@ -12,7 +12,9 @@ int main(){
     texturas.plataforma = LoadTexture("graficos/plataforma.png");
     texturas.porta = LoadTexture("graficos/porta.png");
     texturas.personagem = LoadTexture("graficos/personagem.png");
-
+    // variaveis para diminuir a velocidade do personagem
+    float tempoUltimoMovimento = 0.0f;
+    float delayMovimento = 0.15f;
     int retorno = Menu();
     char m[MAPA_ALTURA][MAPA_LARGURA];
     switch (retorno)
@@ -21,7 +23,7 @@ int main(){
         carregaMapa("mapas/Mapa1.txt", m);
 
         while(!IsKeyPressed(KEY_ESCAPE)){
-        movimentoPersonagem(m);
+        movimentoPersonagem(m, &tempoUltimoMovimento, &delayMovimento);
         desenhaMapa(texturas, m);
         }
         break;
