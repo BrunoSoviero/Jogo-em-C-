@@ -15,16 +15,23 @@ int main(){
     // variaveis para diminuir a velocidade do personagem
     float tempoUltimoMovimento = 0.0f;
     float delayMovimento = 0.15f;
-    int retorno = Menu();
+    int retornoMenu;
+    int retornoJogo = 0;
     char m[MAPA_ALTURA][MAPA_LARGURA];
-    switch (retorno)
+
+    retornoMenu = Menu();
+    switch (retornoMenu)
     {
     case 0:
         carregaMapa("mapas/Mapa1.txt", m);
 
-        while(!IsKeyPressed(KEY_ESCAPE)){
-        movimentoPersonagem(m, &tempoUltimoMovimento, &delayMovimento);
+        while(!IsKeyPressed(KEY_ESCAPE) && retornoJogo == 0){
+        retornoJogo = movimentoPersonagem(m, &tempoUltimoMovimento, &delayMovimento);
         desenhaMapa(texturas, m);
+        }
+        
+        if(retornoJogo == 2){
+            printf("Voce Perdeu!");
         }
         break;
     case 2:

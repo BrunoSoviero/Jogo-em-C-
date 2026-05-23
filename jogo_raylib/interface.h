@@ -25,6 +25,7 @@ typedef struct{
 typedef struct{
     Vector2 posicao;
     int vida;
+    float pontuaçao;
 } Boneco; 
 
 //Declaracao das funcoes

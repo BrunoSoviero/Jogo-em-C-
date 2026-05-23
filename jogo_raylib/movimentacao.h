@@ -3,6 +3,6 @@
 
 #include "interface.h"
 
-void movimentoPersonagem(char m[MAPA_LARGURA][MAPA_ALTURA],float* tempoUltimoMovimento, float* delayMovimento);
+int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA],float* tempoUltimoMovimento, float* delayMovimento);
 
 #endif
