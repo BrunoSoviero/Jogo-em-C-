@@ -112,10 +112,10 @@ Rectangle destino = {comecoMapa + monstro->x, monstro->y, blocoTamanho, blocoTam
 DrawTexturePro(monstro->textura, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
 }
 
-int verificaColisaoMonstro(char m[MAPA_ALTURA][MAPA_LARGURA], Monstro* monstro, float blocoTamanho){
+int verificaColisaoMonstro(char m[MAPA_ALTURA][MAPA_LARGURA], Monstro* monstro, float blocoTamanho, Boneco *b){
     for(int y = 0; y < MAPA_ALTURA; y++){
         for(int x = 0; x < MAPA_LARGURA; x++){
-            if(m[y][x] == 'P'){
+            if(y == b->posicao.y && x == b->posicao.x){
                 int monstroGridX = (int)(monstro->x / blocoTamanho);
                 int monstroGridY = (int)(monstro->y / blocoTamanho);
                 if(monstroGridX == x && monstroGridY == y){
@@ -127,12 +127,15 @@ int verificaColisaoMonstro(char m[MAPA_ALTURA][MAPA_LARGURA], Monstro* monstro, 
     return 0; // Nenhuma colisão detectada
 }
 
-void atualizaMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA],  TexturasJogo texturas){
-    float blocoTamanho = (float)GetScreenHeight() / MAPA_ALTURA;
+void atualizaMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], TexturasJogo texturas, Boneco *b){
+    float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA;
+    float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
+    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
     float comecoMapa = ((float)GetScreenWidth() - (MAPA_LARGURA * blocoTamanho)) / 2.0f;
+
     movimentoMonstro(monstro, m, blocoTamanho);
     desenhaMonstro(monstro, texturas, blocoTamanho, comecoMapa);
-    if(verificaColisaoMonstro(m, monstro, blocoTamanho)){
+    if(verificaColisaoMonstro(m, monstro, blocoTamanho, b)){
         CloseWindow();
     }
 }
