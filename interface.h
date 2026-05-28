@@ -20,14 +20,26 @@ typedef struct{
     Texture2D plataforma;
     Texture2D porta;
     Texture2D personagem;
+    Texture2D monstro;
 } TexturasJogo; // define as texturas do jogo
 
 typedef struct{
     Vector2 posicao;
+    float velocidade;
     int vida;
     float pontuaçao;
+    float tempoUltimoMovimento;
 } Boneco; 
 
+typedef struct {
+    float x;
+    float y;
+    float velocidade;
+    int direcao; // 1 = direita, -1 = esquerda
+        Texture2D textura;
+    float tempoUltimoMovimento;
+    float delayMovimento;
+} Monstro;
 //Declaracao das funcoes
 
 // Funcoes para o menu
@@ -43,6 +55,6 @@ bool botaoPressionado(Vector2 mousePos, Botao* btn, bool mousePressionado);
 
 
 // Funcoes para desenhar os mapas 
-void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA]);
-void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA]);
+void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro);
+void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro);
 #endif

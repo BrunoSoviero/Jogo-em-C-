@@ -66,7 +66,7 @@ int Menu(void)
 
 
 // *** Cria o mapa para jogar o jogo
-void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA]){
+void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* bombeiro){
     int i, j;
     int x, y;
         // pega o tamanho da tela pra ajustar o mapa
@@ -97,25 +97,28 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA]){
                 }
                 if (m[y][x] == 'F') // verifica se é uma porta e desenha a escada
                 {
-                    Rectangle origem = {0, 0, text.escada.width, text.escada.height};
+                    Rectangle origem = {0, 0, text.porta.width, text.porta.height};
                     Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
                     DrawTexturePro(text.porta, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
                 }
-                if (m[y][x] == 'P') // verifica se é a posicao inicial e desenha o personagem
-                {
-                    Rectangle origem = {0, 0, text.escada.width, text.escada.height};
-                    Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
-                    DrawTexturePro(text.personagem, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-                }
+                
             }
         }
-        
+
+    Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
+    Rectangle destinoP = {
+        comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
+        bombeiro->posicao.y * blocoTamanho, 
+        blocoTamanho, 
+        blocoTamanho
+    };
+    DrawTexturePro(text.personagem, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
         EndDrawing();
     
 
 }
 
-void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA]){
+void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro){
     
     FILE *arquivo = fopen(caminhoArquivo, "r");
 
@@ -127,6 +130,15 @@ void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA]){
         m[i][strcspn(m[i], "\r\n")] = '\0';
     }
     
+    for (int y = 0; y < MAPA_ALTURA; y++) {
+    for (int x = 0; x < MAPA_LARGURA; x++) {
+        if (m[y][x] == 'P') {
+            bombeiro->posicao.x = x;
+            bombeiro->posicao.y = y;
+            m[y][x] = '.'; // Tira o 'P' da matriz, mapa agora só tem o cenário.
+        }
+    }
+}
     fclose(arquivo);
 }
 
