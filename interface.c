@@ -73,7 +73,10 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
         float larguraTela = GetScreenWidth();
         float alturaTela = GetScreenHeight();
         // ajusta o bloco pro tamamnho da tela
-        float blocoTamanho = alturaTela/ MAPA_ALTURA;
+        float blocoTamanhoH = alturaTela  / MAPA_ALTURA;
+        float blocoTamanhoV = larguraTela / MAPA_LARGURA;
+        float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
+
         float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho))/ 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
 
         BeginDrawing();
@@ -122,12 +125,17 @@ void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], 
     
     FILE *arquivo = fopen(caminhoArquivo, "r");
 
+    char buffer[256]; 
     for (int i = 0; i < MAPA_ALTURA; i++) // LE O MAPA TXT
     {
-        fgets(m[i], MAPA_LARGURA + 5 , arquivo);
-
-        // Remove \n e \r do final da string
-        m[i][strcspn(m[i], "\r\n")] = '\0';
+        if(fgets(buffer, sizeof(buffer), arquivo) == NULL) break;
+        
+        // Remove \n e \r
+        buffer[strcspn(buffer, "\r\n")] = '\0';
+        
+        // Copia só os primeiros MAPA_LARGURA caracteres pro mapa
+        strncpy(m[i], buffer, MAPA_LARGURA);
+        m[i][MAPA_LARGURA - 1] = '\0'; // garante terminação
     }
     
     for (int y = 0; y < MAPA_ALTURA; y++) {
@@ -136,6 +144,7 @@ void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], 
             bombeiro->posicao.x = x;
             bombeiro->posicao.y = y;
             m[y][x] = '.'; // Tira o 'P' da matriz, mapa agora só tem o cenário.
+            printf("P encontrado em x=%d y=%d\n", x, y);
         }
     }
 }

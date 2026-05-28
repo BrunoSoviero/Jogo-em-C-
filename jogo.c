@@ -23,6 +23,8 @@ int main(){
 
     Monstro monstros[10];
     int numMonstros = 0;
+   
+    
 
     retornoMenu = Menu();
     switch (retornoMenu)
@@ -30,12 +32,18 @@ int main(){
     case 0:
         carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
         
+         float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA;
+        float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
+        float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
+        initMonstro(monstros, &numMonstros, m, blocoTamanho);
 
         while(!IsKeyPressed(KEY_ESCAPE) && retornoJogo == 0){
         retornoJogo = movimentoPersonagem(m, &bombeiro);
 
          desenhaMapa(texturas, m, &bombeiro);
-        
+        for(int k = 0; k < numMonstros; k++){
+            atualizaMonstro(&monstros[k], m, texturas, &bombeiro);
+            } 
         }
         
         if(retornoJogo == 2){
