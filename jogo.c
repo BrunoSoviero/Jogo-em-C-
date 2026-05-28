@@ -12,22 +12,30 @@ int main(){
     texturas.plataforma = LoadTexture("graficos/plataforma.png");
     texturas.porta = LoadTexture("graficos/porta.png");
     texturas.personagem = LoadTexture("graficos/personagem.png");
-    // variaveis para diminuir a velocidade do personagem
-    float tempoUltimoMovimento = 0.0f;
-    float delayMovimento = 0.15f;
+    texturas.monstro = LoadTexture("graficos/monstro.png");
     int retornoMenu;
     int retornoJogo = 0;
     char m[MAPA_ALTURA][MAPA_LARGURA];
+    Boneco bombeiro;
+    bombeiro.posicao.x = 0;
+    bombeiro.posicao.y = 0;
+    bombeiro.velocidade = 0.15f;
+
+    Monstro monstros[10];
+    int numMonstros = 0;
 
     retornoMenu = Menu();
     switch (retornoMenu)
     {
     case 0:
-        carregaMapa("mapas/Mapa1.txt", m);
+        carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
+        
 
         while(!IsKeyPressed(KEY_ESCAPE) && retornoJogo == 0){
-        retornoJogo = movimentoPersonagem(m, &tempoUltimoMovimento, &delayMovimento);
-        desenhaMapa(texturas, m);
+        retornoJogo = movimentoPersonagem(m, &bombeiro);
+
+         desenhaMapa(texturas, m, &bombeiro);
+        
         }
         
         if(retornoJogo == 2){
@@ -45,6 +53,7 @@ int main(){
     UnloadTexture(texturas.plataforma);
     UnloadTexture(texturas.porta);
     UnloadTexture(texturas.personagem);
+    UnloadTexture(texturas.monstro);
     CloseWindow();
 
 
