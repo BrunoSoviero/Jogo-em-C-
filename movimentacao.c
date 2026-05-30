@@ -54,6 +54,11 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
         }
     }
     }
+    if (IsKeyPressed(KEY_ENTER)){
+        if(m[y][x] == 'F'){
+            return 1;
+        }
+    }
 return 0;
 }
 
