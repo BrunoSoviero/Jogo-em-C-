@@ -21,6 +21,7 @@ typedef struct{
     Texture2D porta;
     Texture2D personagem;
     Texture2D monstro;
+    Texture2D fundo;
 } TexturasJogo; // define as texturas do jogo
 
 typedef struct{
