@@ -80,6 +80,7 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
         float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho))/ 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
 
         BeginDrawing();
+
         ClearBackground(BLACK);
 
         for (y = 0; y < MAPA_ALTURA; y++)
@@ -108,7 +109,7 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
             }
         }
 
-    Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
+     Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
     Rectangle destinoP = {
         comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
         bombeiro->posicao.y * blocoTamanho, 
@@ -116,7 +117,8 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
         blocoTamanho
     };
     DrawTexturePro(text.personagem, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
-        EndDrawing();
+
+    EndDrawing();
     
 
 }

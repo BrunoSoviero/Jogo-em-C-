@@ -13,6 +13,8 @@ int main(){
     texturas.porta = LoadTexture("graficos/porta.png");
     texturas.personagem = LoadTexture("graficos/personagem.png");
     texturas.monstro = LoadTexture("graficos/monstro.png");
+    texturas.fundo = LoadTexture("graficos/fundo.png");
+    
     int retornoMenu;
     int retornoJogo = 0;
     char m[MAPA_ALTURA][MAPA_LARGURA];
