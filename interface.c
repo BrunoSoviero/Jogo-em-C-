@@ -18,7 +18,7 @@ int Menu(void)
     InitBotao(&botaoStart, "graficos/start.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.30f }, escalaTela);
     InitBotao(&botaoScore, "graficos/score.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.50f }, escalaTela);
     InitBotao(&botaoExit,  "graficos/exit.png",  (Vector2){ centroX, TAMANHO_VERTICAL * 0.70f }, escalaTela);
-     bool sair = false;
+    bool sair = false;
 
     while(WindowShouldClose() == false && sair == false)
     {
@@ -71,43 +71,43 @@ int Menu(void)
 void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* bombeiro){
     int i, j;
     int x, y;
-        // pega o tamanho da tela pra ajustar o mapa
-        float larguraTela = GetScreenWidth();
-        float alturaTela = GetScreenHeight();
-        // ajusta o bloco pro tamamnho da tela
-        float blocoTamanhoH = alturaTela  / MAPA_ALTURA;
-        float blocoTamanhoV = larguraTela / MAPA_LARGURA;
-        float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
+    // pega o tamanho da tela pra ajustar o mapa
+    float larguraTela = GetScreenWidth();
+    float alturaTela = GetScreenHeight();
+    // ajusta o bloco pro tamamnho da tela
+    float blocoTamanhoH = alturaTela  / MAPA_ALTURA;
+    float blocoTamanhoV = larguraTela / MAPA_LARGURA;
+    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
 
-        float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho))/ 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
+    float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho))/ 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
 
-        for (y = 0; y < MAPA_ALTURA; y++)
+    for (y = 0; y < MAPA_ALTURA; y++)
+    {
+        for (x = 0; x < MAPA_LARGURA; x++)
         {
-            for (x = 0; x < MAPA_LARGURA; x++)
+            if (m[y][x] == 'Z') // Verifica se é uma plataforma e desenha a plataforma
             {
-                if (m[y][x] == 'Z') // Verifica se é uma plataforma e desenha a plataforma
-                {
-                    Rectangle origem = {0, 0, text.plataforma.width, text.plataforma.height}; // recorta o tamanho da imagem original
-                    Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho}; //posicao e o tamamnho que a imagem tera na tela
-                    DrawTexturePro(text.plataforma, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-                }
-                if (m[y][x] == 'H' || m[y][x] == 'S') // verifica se é uma escada e desenha a escada
-                {
-                    Rectangle origem = {0, 0, text.escada.width, text.escada.height};
-                    Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
-                    DrawTexturePro(text.escada, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-                }
-                if (m[y][x] == 'F') // verifica se é uma porta e desenha a escada
-                {
-                    Rectangle origem = {0, 0, text.porta.width, text.porta.height};
-                    Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
-                    DrawTexturePro(text.porta, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-                }
-                
+                Rectangle origem = {0, 0, text.plataforma.width, text.plataforma.height}; // recorta o tamanho da imagem original
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho}; //posicao e o tamamnho que a imagem tera na tela
+                DrawTexturePro(text.plataforma, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
             }
+            if (m[y][x] == 'H' || m[y][x] == 'S') // verifica se é uma escada e desenha a escada
+            {
+                Rectangle origem = {0, 0, text.escada.width, text.escada.height};
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
+                DrawTexturePro(text.escada, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
+            if (m[y][x] == 'F') // verifica se é uma porta e desenha a escada
+            {
+                Rectangle origem = {0, 0, text.porta.width, text.porta.height};
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
+                DrawTexturePro(text.porta, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
+            
         }
+    }
 
-     Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
+    Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
     Rectangle destinoP = {
         comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
         bombeiro->posicao.y * blocoTamanho, 
@@ -135,15 +135,15 @@ void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], 
     }
     
     for (int y = 0; y < MAPA_ALTURA; y++) {
-    for (int x = 0; x < MAPA_LARGURA; x++) {
-        if (m[y][x] == 'P') {
-            bombeiro->posicao.x = x;
-            bombeiro->posicao.y = y;
-            m[y][x] = '.'; // Tira o 'P' da matriz, mapa agora só tem o cenário.
-            printf("P encontrado em x=%d y=%d\n", x, y);
+        for (int x = 0; x < MAPA_LARGURA; x++) {
+            if (m[y][x] == 'P') {
+                bombeiro->posicao.x = x;
+                bombeiro->posicao.y = y;
+                m[y][x] = '.'; // Tira o 'P' da matriz, mapa agora só tem o cenário.
+                printf("P encontrado em x=%d y=%d\n", x, y);
+            }
         }
     }
-}
     fclose(arquivo);
 }
 
@@ -188,20 +188,15 @@ void desenhaBotao(Botao* btn)
     DrawTexture(btn->texturaBotao, btn->limites.x, btn->limites.y, corBotao);
 } 
 
-    bool botaoPressionado(Vector2 mousePos, Botao* btn, bool mousePressionado){
+bool botaoPressionado(Vector2 mousePos, Botao* btn, bool mousePressionado){
     Rectangle rect = {btn->limites.x, btn->limites.y, (float)btn->texturaBotao.width, (float)btn->texturaBotao.height};
 
     if (CheckCollisionPointRec(mousePos, rect) && mousePressionado){
-
         return true;
-
     }
-
     else    
-
         return false;
 }
-
 int MenuPausa(void)
 {
     // Carrega a textura do fundo do menu

@@ -6,6 +6,7 @@
 int main(){
     InitWindow(TAMANHO_HORIZONTAL, TAMANHO_VERTICAL, "Jogo Final");
     SetTargetFPS(FPS);
+    SetExitKey(KEY_NULL);
 
     TexturasJogo texturas;
     texturas.escada = LoadTexture("graficos/escada.png");
@@ -30,37 +31,48 @@ int main(){
     int faseAtual = 1;
 
     int retornoPausa = 0;
+    float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA;
+    float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
+    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
 
-    retornoMenu = Menu();
-    switch (retornoMenu)
+    while(!WindowShouldClose())
     {
-        case 0:
+        retornoMenu = Menu();
+        if(retornoMenu == 2)
+        {
+            break;
+        }
+        switch(retornoMenu)
+        {
+            case 0:
+            fimDeJogo = 0;
+            faseAtual = 1;
+            retornoJogo = 0;
+            bombeiro.posicao.x = 0;
+            bombeiro.posicao.y = 0;
+            bombeiro.velocidade = 0.15f;
             carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
-            
-            float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA;
-            float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
-            float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
             initMonstro(monstros, &numMonstros, m, blocoTamanho);
 
-            while(!IsKeyPressed(KEY_ESCAPE) && retornoJogo == 0)
-            {         
+            while(retornoJogo == 0 && !fimDeJogo)
+            {
                 retornoJogo = movimentoPersonagem(m, &bombeiro);
-                if (retornoJogo == 1)
+                if (retornoJogo == 1) // passou de fase
                 {
                     if (faseAtual == 1)
                     {
-                        // Avança para o Mapa 2
+                        // avança para mapa 2
                         carregaMapa("mapas/Mapa2.txt", m, &bombeiro);
                         initMonstro(monstros, &numMonstros, m, blocoTamanho);
                         faseAtual = 2; 
-                        retornoJogo = 0; // Reseta para continuar jogando no mesmo loop
+                        retornoJogo = 0; // reset pra continuar jogando no mesmo loop
                     }
                     else if (faseAtual == 2)
                     {
                         carregaMapa("mapas/Mapa3.txt", m, &bombeiro);
                         initMonstro(monstros, &numMonstros, m, blocoTamanho);
                         faseAtual = 3; 
-                        retornoJogo = 0; // Reseta novamente para continuar no loop
+                        retornoJogo = 0; // reseta de novo para continuar no loop
                     }
                     else if (faseAtual == 3)
                     {
@@ -78,18 +90,23 @@ int main(){
 
                 if (!fimDeJogo)
                 {
-                    if (IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_P))
+                    if (IsKeyPressed(KEY_ESCAPE))
                     {
                         retornoPausa = MenuPausa();
                         if(retornoPausa == 0){
-                            continue; // Volta para o jogo
-                        } else if(retornoPausa == 1){
+                            
+                        } 
+                        else if(retornoPausa == 1){
+                            fimDeJogo = 1;
+                            retornoJogo = -1;
                             break; // Volta para o menu
                         } else if(retornoPausa == 2){
                             CloseWindow(); // Sai do jogo
                             return 0;
                         }
+                        while (GetKeyPressed() != 0);
                     }
+
                     BeginDrawing();
                     ClearBackground(BLACK);
                     desenhaMapa(texturas, m, &bombeiro);
@@ -101,12 +118,10 @@ int main(){
                 }
             }
         break;
-        case 2:
-            CloseWindow();
-            break;
         default:
             break;
     }
+}
     UnloadTexture(texturas.escada);
     UnloadTexture(texturas.plataforma);
     UnloadTexture(texturas.porta);
@@ -115,5 +130,5 @@ int main(){
     CloseWindow();
 
 
-
+    return 0;
 }
