@@ -111,31 +111,31 @@ void movimentoMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], float
     monstro->tempoUltimoMovimento = tempoAtual;
 }
 
-void desenhaMonstro(Monstro* monstro, TexturasJogo texturas, float blocoTamanho, float comecoMapa){
-Rectangle origem = {0, 0, monstro->textura.width, monstro->textura.height};
+void desenhaMonstro(Monstro* monstro, TexturasJogo texturas, float blocoTamanho, float comecoMapa){ // Desenha o monstro na tela
+Rectangle origem = {0, 0, monstro->textura.width, monstro->textura.height}; 
 Rectangle destino = {comecoMapa + monstro->x, monstro->y, blocoTamanho, blocoTamanho};
-DrawTexturePro(monstro->textura, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+DrawTexturePro(monstro->textura, origem, destino, (Vector2){0, 0}, 0.0f, WHITE); 
 }
 
-int verificaColisaoMonstro(char m[MAPA_ALTURA][MAPA_LARGURA], Monstro* monstro, float blocoTamanho, Boneco *b){
+int verificaColisaoMonstro(char m[MAPA_ALTURA][MAPA_LARGURA], Monstro* monstro, float blocoTamanho, Boneco *b){ // Verifica se o monstro colidiu com o personagem
     for(int y = 0; y < MAPA_ALTURA; y++){
         for(int x = 0; x < MAPA_LARGURA; x++){
             if(y == b->posicao.y && x == b->posicao.x){
                 int monstroGridX = (int)(monstro->x / blocoTamanho);
                 int monstroGridY = (int)(monstro->y / blocoTamanho);
                 if(monstroGridX == x && monstroGridY == y){
-                    return 1; // Colisão detectada
+                    return 1; // Colisao detectada
                 }
             }
         }
     }
-    return 0; // Nenhuma colisão detectada
+    return 0; // Nenhuma colisao detectada
 }
 
-void atualizaMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], TexturasJogo texturas, Boneco *b){
-    float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA;
+void atualizaMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], TexturasJogo texturas, Boneco *b){ 
+    float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA; 
     float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
-    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
+    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV; 
     float comecoMapa = ((float)GetScreenWidth() - (MAPA_LARGURA * blocoTamanho)) / 2.0f;
 
     movimentoMonstro(monstro, m, blocoTamanho);

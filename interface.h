@@ -28,7 +28,7 @@ typedef struct{
     Vector2 posicao;
     float velocidade;
     int vida;
-    float pontuaçao;
+    float pontuacao;
     float tempoUltimoMovimento;
 } Boneco; 
 
@@ -58,4 +58,7 @@ bool botaoPressionado(Vector2 mousePos, Botao* btn, bool mousePressionado);
 // Funcoes para desenhar os mapas 
 void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro);
 void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro);
+
+// Funcao para o menu de pausa
+int MenuPausa(void);
 #endif

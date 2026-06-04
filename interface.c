@@ -60,8 +60,10 @@ int Menu(void)
     UnloadBotao(&botaoStart);
     UnloadBotao(&botaoScore);
     UnloadBotao(&botaoExit);
+    UnloadTexture(background);
     UnloadImage(imgFundo);
     CloseWindow();
+    return 2;
 }
 
 
@@ -78,10 +80,6 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
         float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
 
         float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho))/ 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
-
-        BeginDrawing();
-
-        ClearBackground(BLACK);
 
         for (y = 0; y < MAPA_ALTURA; y++)
         {
@@ -117,10 +115,6 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
         blocoTamanho
     };
     DrawTexturePro(text.personagem, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
-
-    EndDrawing();
-    
-
 }
 
 void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro){
@@ -206,4 +200,67 @@ void desenhaBotao(Botao* btn)
     else    
 
         return false;
+}
+
+int MenuPausa(void)
+{
+    // Carrega a textura do fundo do menu
+    Image imgFundo = LoadImage("graficos/background.png");
+    ImageResize(&imgFundo, TAMANHO_HORIZONTAL, TAMANHO_VERTICAL);
+
+    Texture2D background = LoadTextureFromImage(imgFundo);
+
+    Botao botaoContinue, botaoMenu, botaoExit;
+    float centroX = TAMANHO_HORIZONTAL / 3.0f; 
+    float escalaTela = (float)TAMANHO_HORIZONTAL/ 800.0f; // pega o valor do tamanho da tela e divide por 800 (valor original da tela)
+    // Inicializacao dos botoes do menu
+    InitBotao(&botaoContinue, "graficos/continue.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.30f }, escalaTela);
+    InitBotao(&botaoMenu, "graficos/menu.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.50f }, escalaTela);
+    InitBotao(&botaoExit,  "graficos/exit.png",  (Vector2){ centroX, TAMANHO_VERTICAL * 0.70f }, escalaTela);
+     bool sair = false;
+
+    while(WindowShouldClose() == false && sair == false)
+    {
+        Vector2 mousePosition = GetMousePosition();
+        bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT); // verfica se o mouse esta pressionado
+
+        if(botaoPressionado(mousePosition, &botaoContinue, mousePressed)){
+            printf("ContinueButtonPressed");
+            UnloadBotao(&botaoContinue);
+            UnloadBotao(&botaoMenu);
+            UnloadBotao(&botaoExit);
+            UnloadImage(imgFundo);
+            return 0;
+        }
+        if(botaoPressionado(mousePosition, &botaoMenu, mousePressed)){
+            printf("MenuButtonPressed");
+            UnloadBotao(&botaoContinue);
+            UnloadBotao(&botaoMenu);
+            UnloadBotao(&botaoExit);
+            UnloadImage(imgFundo);
+            return 1;
+        }
+        if(botaoPressionado(mousePosition, &botaoExit, mousePressed)){
+            UnloadBotao(&botaoContinue);
+            UnloadBotao(&botaoMenu);
+            UnloadBotao(&botaoExit);
+            UnloadImage(imgFundo);
+            return 2;
+        }
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTexture(background, 0, 0, WHITE); // Desenha o fundo
+        desenhaBotao(&botaoContinue); 
+        desenhaBotao(&botaoMenu);
+        desenhaBotao(&botaoExit);
+        // Isso vai desenhar uma linha vermelha exatamente onde o seu código acha que o botão está
+        EndDrawing();
+    }
+    UnloadBotao(&botaoContinue);
+    UnloadBotao(&botaoMenu);
+    UnloadBotao(&botaoExit);
+    UnloadTexture(background);
+    UnloadImage(imgFundo);
+    CloseWindow();
+    return 2;
 }
