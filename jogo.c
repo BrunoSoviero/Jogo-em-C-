@@ -6,8 +6,8 @@
 int main(){
     InitWindow(TAMANHO_HORIZONTAL, TAMANHO_VERTICAL, "Jogo Final");
     SetTargetFPS(FPS);
-    SetExitKey(KEY_NULL);
 
+    // Inicializa as texturas do jogo
     TexturasJogo texturas;
     texturas.escada = LoadTexture("graficos/escada.png");
     texturas.plataforma = LoadTexture("graficos/plataforma.png");
@@ -16,8 +16,10 @@ int main(){
     texturas.monstro = LoadTexture("graficos/monstro.png");
     texturas.fundo = LoadTexture("graficos/fundo.png");
     
+    // Inicializa as variaveis para o funcinamento do jogo
     int retornoMenu; 
     int retornoJogo = 0; 
+    int voltouPausa = 0;
     char m[MAPA_ALTURA][MAPA_LARGURA];
     Boneco bombeiro;
     bombeiro.posicao.x = 0;
@@ -37,14 +39,25 @@ int main(){
 
     while(!WindowShouldClose())
     {
+        
+        if(!voltouPausa){
         retornoMenu = Menu();
-        if(retornoMenu == 2)
+        }
+        else {
+            voltouPausa = 0;
+            continue; // ← pula o switch e volta pro topo do while, chamando Menu() na próxima iteração
+        }
+        voltouPausa = 0;
+        
+        if(retornoMenu == 2) // Se retornar 2 é para fechar o jogo
         {
             break;
         }
+
         switch(retornoMenu)
         {
-            case 0:
+            case 0: // Se o botão de iniciar for pressionado começa o jogo
+            // atribui os valores iniciais para as variáveis do jogo
             fimDeJogo = 0;
             faseAtual = 1;
             retornoJogo = 0;
@@ -54,7 +67,7 @@ int main(){
             carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
             initMonstro(monstros, &numMonstros, m, blocoTamanho);
 
-            while(retornoJogo == 0 && !fimDeJogo)
+            while(retornoJogo == 0 && !fimDeJogo) // Loop do jogo
             {
                 retornoJogo = movimentoPersonagem(m, &bombeiro);
                 if (retornoJogo == 1) // passou de fase
@@ -90,23 +103,22 @@ int main(){
 
                 if (!fimDeJogo)
                 {
-                    if (IsKeyPressed(KEY_ESCAPE))
+                   if (IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_P))
                     {
                         retornoPausa = MenuPausa();
                         if(retornoPausa == 0){
-                            
-                        } 
-                        else if(retornoPausa == 1){
-                            fimDeJogo = 1;
+                            continue; // Volta para o jogo
+                        } else if(retornoPausa == 1){
+                            voltouPausa = 1;
                             retornoJogo = -1;
                             break; // Volta para o menu
                         } else if(retornoPausa == 2){
                             CloseWindow(); // Sai do jogo
                             return 0;
                         }
-                        while (GetKeyPressed() != 0);
                     }
-
+                }
+                    // Desenha o mapa e o monstro atualizado
                     BeginDrawing();
                     ClearBackground(BLACK);
                     desenhaMapa(texturas, m, &bombeiro);
@@ -116,12 +128,12 @@ int main(){
                     }
                     EndDrawing();
                 }
-            }
+            
         break;
         default:
             break;
+        }
     }
-}
     UnloadTexture(texturas.escada);
     UnloadTexture(texturas.plataforma);
     UnloadTexture(texturas.porta);

@@ -20,6 +20,16 @@ int Menu(void)
     InitBotao(&botaoExit,  "graficos/exit.png",  (Vector2){ centroX, TAMANHO_VERTICAL * 0.70f }, escalaTela);
     bool sair = false;
 
+    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTexture(background, 0, 0, WHITE);
+        desenhaBotao(&botaoStart);
+        desenhaBotao(&botaoScore);
+        desenhaBotao(&botaoExit);
+        EndDrawing();
+    }
+
     while(WindowShouldClose() == false && sair == false)
     {
         Vector2 mousePosition = GetMousePosition();
@@ -139,8 +149,7 @@ void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], 
             if (m[y][x] == 'P') {
                 bombeiro->posicao.x = x;
                 bombeiro->posicao.y = y;
-                m[y][x] = '.'; // Tira o 'P' da matriz, mapa agora só tem o cenário.
-                printf("P encontrado em x=%d y=%d\n", x, y);
+                m[y][x] = '.'; 
             }
         }
     }
@@ -213,6 +222,16 @@ int MenuPausa(void)
     InitBotao(&botaoMenu, "graficos/menu.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.50f }, escalaTela);
     InitBotao(&botaoExit,  "graficos/exit.png",  (Vector2){ centroX, TAMANHO_VERTICAL * 0.70f }, escalaTela);
      bool sair = false;
+
+    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) { // Debug para quando clicar para voltar para o menu o clique nao pegar no menu principal
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTexture(background, 0, 0, WHITE);
+        desenhaBotao(&botaoContinue);
+        desenhaBotao(&botaoMenu);
+        desenhaBotao(&botaoExit);
+        EndDrawing();
+    }
 
     while(WindowShouldClose() == false && sair == false)
     {
