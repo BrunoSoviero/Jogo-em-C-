@@ -21,6 +21,7 @@ int main()
     int retornoVitoria = 0;
     int retornoJogo = 0;
     int voltouPausa = 0;
+    int retornoDerrota = 0;
     char m[MAPA_ALTURA][MAPA_LARGURA];
     Boneco bombeiro;
     bombeiro.posicao.x = 0;
@@ -122,6 +123,7 @@ int main()
                     }
                     else if (retornoJogo == 2)
                     {
+                        retornoDerrota = desenhaDerrota();
                         printf("Voce Perdeu!\n");
                         fimDeJogo = 1; // Encerra o loop do jogo
                     }

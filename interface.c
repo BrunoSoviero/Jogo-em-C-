@@ -341,3 +341,28 @@ int desenhaVitoria(void){
 }
     return 0;
 }
+
+int desenhaDerrota(void){
+     // Drena todos os frames enquanto ENTER estiver pressionado
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        EndDrawing();
+        
+        if (!IsKeyDown(KEY_ENTER))
+            break; // Só sai quando ENTER estiver completamente solto
+    }
+    while(!WindowShouldClose()){
+    BeginDrawing();
+    ClearBackground(BLACK);
+    DrawText("Você Perdeu!", MAPA_LARGURA/2 + 60, MAPA_ALTURA/2 + 200, 100, WHITE);
+    DrawText("Pressione ENTER para continuar", MAPA_LARGURA/2 + 110, MAPA_ALTURA/2 + 300, 30, WHITE);
+    EndDrawing();
+    if(IsKeyPressed(KEY_ENTER)){
+
+        return 1;
+    }
+}
+    return 0;
+}

@@ -75,4 +75,5 @@ void RegistraPlacar(TIPO_PLACAR placar[], int tempo, FILE *arq);
 void imprimePlacar(TIPO_PLACAR placar[]);
 
 int desenhaVitoria(void);
+int desenhaDerrota(void);
 #endif
