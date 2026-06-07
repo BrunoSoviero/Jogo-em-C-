@@ -1,6 +1,7 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 #include "raylib.h"
+#include <stdio.h> 
 
 #define FPS 60
 #define TAMANHO_HORIZONTAL 800
@@ -71,4 +72,7 @@ int MenuPausa(void);
 
 // Funcoes para o placar
 void RegistraPlacar(TIPO_PLACAR placar[], int tempo, FILE *arq);
+void imprimePlacar(TIPO_PLACAR placar[]);
+
+int desenhaVitoria(void);
 #endif

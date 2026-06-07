@@ -1,4 +1,4 @@
-#include "interface.h"
+#include "interface.h" 
 #include <stdio.h>
 #include <string.h>
 
@@ -20,7 +20,8 @@ int Menu(void)
     InitBotao(&botaoExit,  "graficos/exit.png",  (Vector2){ centroX, TAMANHO_VERTICAL * 0.70f }, escalaTela);
     bool sair = false;
 
-    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) { // Debug para a volta do menu pausa
+        // equanto o mouse estiver abaixado, ele so desenha o menu sem verificar nenhum clique para nao pegar toques acidentais
         BeginDrawing();
         ClearBackground(BLACK);
         DrawTexture(background, 0, 0, WHITE);
@@ -224,6 +225,7 @@ int MenuPausa(void)
      bool sair = false;
 
     while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) { // Debug para quando clicar para voltar para o menu o clique nao pegar no menu principal
+    // enquanto o mouse estiver abaixado, ele so desenha o menu sem verificar nenhum clique para nao pegar toques acidentais
         BeginDrawing();
         ClearBackground(BLACK);
         DrawTexture(background, 0, 0, WHITE);
@@ -278,6 +280,7 @@ int MenuPausa(void)
     CloseWindow();
     return 2;
 }
+
 void RegistraPlacar(TIPO_PLACAR placar[], int tempoFinal, FILE *arq)
 {
     char nome[20];
@@ -312,4 +315,29 @@ void imprimePlacar(TIPO_PLACAR placar[]){
             printf("%d. %s - %d segundos\n", i+1, placar[i].nome, placar[i].time);
         }
     }
+}
+
+int desenhaVitoria(void){
+     // Drena todos os frames enquanto ENTER estiver pressionado
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        EndDrawing();
+        
+        if (!IsKeyDown(KEY_ENTER))
+            break; // Só sai quando ENTER estiver completamente solto
+    }
+    while(!WindowShouldClose()){
+    BeginDrawing();
+    ClearBackground(BLACK);
+    DrawText("Você Ganhou!", MAPA_LARGURA/2 + 60, MAPA_ALTURA/2 + 200, 100, WHITE);
+    DrawText("Pressione ENTER para continuar", MAPA_LARGURA/2 + 110, MAPA_ALTURA/2 + 300, 30, WHITE);
+    EndDrawing();
+    if(IsKeyPressed(KEY_ENTER)){
+
+        return 1;
+    }
+}
+    return 0;
 }
