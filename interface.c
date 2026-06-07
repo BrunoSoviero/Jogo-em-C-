@@ -1,4 +1,4 @@
-#include "interface.h" 
+#include "interface.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -277,4 +277,39 @@ int MenuPausa(void)
     UnloadImage(imgFundo);
     CloseWindow();
     return 2;
+}
+void RegistraPlacar(TIPO_PLACAR placar[], int tempoFinal, FILE *arq)
+{
+    char nome[20];
+    if(tempoFinal < placar[9].time){ // verifica se o tempo do jogador é melhor que o ultimo colocado no placar
+        printf("Digite seu nome: ");
+        scanf("%s", nome);
+    }
+    else
+    {
+        return;
+    }
+    for(int i = 0; i < 10; i++)
+    {
+        if(tempoFinal < placar[i].time)
+        { 
+            for(int j = 9; j > i; j--)
+            {
+                placar[j] = placar[j-1];
+            }
+            strcpy(placar[i].nome, nome);  // copia o nome do jogador para a posição correta no placar
+            placar[i].time = tempoFinal;
+            break;
+        }
+    }
+    rewind(arq); // volta para o inicio do arquivo para sobrescrever os placares antigos
+    fwrite(placar, sizeof(TIPO_PLACAR), 10, arq); // escreve o placar atualizado no arquivo
+}
+
+void imprimePlacar(TIPO_PLACAR placar[]){
+    for(int i = 0; i < 10; i++){
+        if(placar[i].nome[0] != '\0'){
+            printf("%d. %s - %d segundos\n", i+1, placar[i].nome, placar[i].time);
+        }
+    }
 }

@@ -3,7 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int main(){
+int main()
+{
     InitWindow(TAMANHO_HORIZONTAL, TAMANHO_VERTICAL, "Jogo Final");
     SetTargetFPS(FPS);
 
@@ -37,6 +38,27 @@ int main(){
     float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
     float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
 
+    int tempoInicio, tempoFinal;
+    TIPO_PLACAR placar[10];  
+    FILE *arq = fopen("placar.bin", "rb+"); 
+
+     if (arq == NULL) 
+     {
+        arq = fopen("placar.bin", "wb+"); // cria o arquivo se não existir
+        if (arq == NULL) {
+            printf("Erro ao criar o arquivo de placar.\n");
+            return 1;
+        }
+    }
+
+    for (int i = 0; i < 10; i++) 
+    {
+        placar[i].time = 9999; // Inicializa os tempos como 0
+        strcpy(placar[i].nome, ""); // Inicializa os nomes como string vazia
+    }
+    fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os placares existentes do arquivo
+    imprimePlacar(placar); // Imprime o placar atual no console
+
     while(!WindowShouldClose())
     {
         
@@ -66,6 +88,7 @@ int main(){
             bombeiro.velocidade = 0.15f;
             carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
             initMonstro(monstros, &numMonstros, m, blocoTamanho);
+            tempoInicio = GetTime(); // Inicia o tempo do jogo
 
             while(retornoJogo == 0 && !fimDeJogo) // Loop do jogo
             {
@@ -87,53 +110,65 @@ int main(){
                         faseAtual = 3; 
                         retornoJogo = 0; // reseta de novo para continuar no loop
                     }
-                    else if (faseAtual == 3)
+                    else if (faseAtual == 3)  
                     {
                         // Se venceu o mapa 3 (que agora é o último), vitória total!
                         printf("Parabens! Voce fechou o jogo inteiro!\n");
                         fimDeJogo = 1;
+                        tempoFinal = GetTime() - tempoInicio; // Calcula o tempo total do jogo
                     }
                 }
-                    // Se o jogador perdeu
-                    else if (retornoJogo == 2)
-                    {
-                        printf("Voce Perdeu!\n");
-                        fimDeJogo = 1; // Encerra o loop do jogo
-                    }
-
-                if (!fimDeJogo)
-                {
-                   if (IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_P))
-                    {
-                        retornoPausa = MenuPausa();
-                        if(retornoPausa == 0){
-                            continue; // Volta para o jogo
-                        } else if(retornoPausa == 1){
-                            voltouPausa = 1;
-                            retornoJogo = -1;
-                            break; // Volta para o menu
-                        } else if(retornoPausa == 2){
-                            CloseWindow(); // Sai do jogo
-                            return 0;
-                        }
-                    }
-                }
-                    // Desenha o mapa e o monstro atualizado
-                    BeginDrawing();
-                    ClearBackground(BLACK);
-                    desenhaMapa(texturas, m, &bombeiro);
-                    for(int k = 0; k < numMonstros; k++)
-                    {
-                        atualizaMonstro(&monstros[k], m, texturas, &bombeiro);
-                    }
-                    EndDrawing();
-                }
-            
-        break;
-        default:
+            }
+            if(faseAtual == 3 && fimDeJogo)
+            {   
+                CloseWindow();
+                RegistraPlacar(placar, tempoFinal, arq);
+                imprimePlacar(placar);
+                fclose(arq);
+                return 0;
+            }
+            fclose(arq);
             break;
         }
     }
+    // Se o jogador perdeu
+    else if (retornoJogo == 2)
+    {
+        printf("Voce Perdeu!\n");
+        fimDeJogo = 1; // Encerra o loop do jogo
+    }
+
+    if (!fimDeJogo)
+    {
+        if (IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_P)) 
+        {
+            retornoPausa = MenuPausa();
+            if(retornoPausa == 0)
+            {
+                continue; // Volta para o jogo
+            } else if(retornoPausa == 1){
+                voltouPausa = 1;
+                retornoJogo = -1;
+                break; // Volta para o menu
+                } else if(retornoPausa == 2){
+                    CloseWindow(); // Sai do jogo    
+                    return 0;
+                }
+        }
+    }
+    // Desenha o mapa e o monstro atualizado
+    BeginDrawing();
+    ClearBackground(BLACK);
+    desenhaMapa(texturas, m, &bombeiro);
+    for(int k = 0; k < numMonstros; k++)
+    {
+        atualizaMonstro(&monstros[k], m, texturas, &bombeiro);
+    }
+    EndDrawing();           
+    break;
+    default:
+    break;
+        
     UnloadTexture(texturas.escada);
     UnloadTexture(texturas.plataforma);
     UnloadTexture(texturas.porta);

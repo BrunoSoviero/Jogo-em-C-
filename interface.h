@@ -41,6 +41,13 @@ typedef struct {
     float tempoUltimoMovimento;
     float delayMovimento;
 } Monstro;
+
+typedef struct tipo_placar
+{
+char nome[20];
+int time;
+} TIPO_PLACAR;
+
 //Declaracao das funcoes
 
 // Funcoes para o menu
@@ -61,4 +68,7 @@ void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], 
 
 // Funcao para o menu de pausa
 int MenuPausa(void);
+
+// Funcoes para o placar
+void RegistraPlacar(TIPO_PLACAR placar[], int tempo, FILE *arq);
 #endif
