@@ -281,15 +281,61 @@ int MenuPausa(void)
     return 2;
 }
 
-void RegistraPlacar(TIPO_PLACAR placar[], int tempoFinal, FILE *arq)
+
+void RegistraPlacar(TIPO_PLACAR placar[], float tempoFinal, FILE *arq)
 {
-    char nome[20];
+     char nome[20] = "\0";
+    int contaLetra = 0;
+    
     if(tempoFinal < placar[9].time){ // verifica se o tempo do jogador é melhor que o ultimo colocado no placar
-        printf("Digite seu nome: ");
-        scanf("%s", nome);
+        
+        while (IsKeyDown(KEY_ENTER)) // debug para nao pegar o enter da tela de vitoria
+        {
+            BeginDrawing();
+                ClearBackground(BLACK);
+            EndDrawing();
+        }
+        while (GetCharPressed() > 0); // debug para esvaziar a fila de digitação
+        while(!IsKeyPressed(KEY_ENTER))
+        {
+            int caractere = GetCharPressed();
+
+            while(caractere>0 )
+            {
+            if((caractere >= 32) && (caractere <= 126) && (contaLetra < 20))
+            {
+                nome[contaLetra] = (char)caractere;
+                contaLetra++;
+                nome[contaLetra] = '\0';
+            }
+            caractere = GetCharPressed();
+            }
+            if (IsKeyPressed(KEY_BACKSPACE))
+            {
+                contaLetra--;
+                if (contaLetra < 0) 
+                    contaLetra = 0;
+                nome[contaLetra] = '\0';
+            }
+            
+            BeginDrawing();
+            ClearBackground(BLACK);
+
+            DrawText("Digite seu nome: ", TAMANHO_HORIZONTAL/2 - (MeasureText("Digite seu nome: ", 40) / 2), TAMANHO_VERTICAL/4, 40, WHITE);
+            DrawText(nome, TAMANHO_HORIZONTAL/2 - (MeasureText(nome, 35) / 2), TAMANHO_VERTICAL/4 + 60, 35, WHITE);
+            DrawText("Pressione ENTER para salvar", TAMANHO_HORIZONTAL/2 - (MeasureText("Pressione ENTER para salvar", 30) / 2), TAMANHO_VERTICAL/4 + 400, 30, WHITE);
+            EndDrawing();
+        }
     }
     else
     {
+        while (IsKeyDown(KEY_ENTER)) 
+        {
+            BeginDrawing();
+                ClearBackground(BLACK);
+            EndDrawing();
+        }
+        desenhaPlacarNaTela(placar);
         return;
     }
     for(int i = 0; i < 10; i++)
@@ -307,6 +353,13 @@ void RegistraPlacar(TIPO_PLACAR placar[], int tempoFinal, FILE *arq)
     }
     rewind(arq); // volta para o inicio do arquivo para sobrescrever os placares antigos
     fwrite(placar, sizeof(TIPO_PLACAR), 10, arq); // escreve o placar atualizado no arquivo
+    while (IsKeyDown(KEY_ENTER)) 
+        {
+            BeginDrawing();
+                ClearBackground(BLACK);
+            EndDrawing();
+        }
+    desenhaPlacarNaTela(placar);
 }
 
 void imprimePlacar(TIPO_PLACAR placar[]){
@@ -314,6 +367,47 @@ void imprimePlacar(TIPO_PLACAR placar[]){
         if(placar[i].nome[0] != '\0'){
             printf("%d. %s - %d segundos\n", i+1, placar[i].nome, placar[i].time);
         }
+    }
+}
+
+void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
+    GetKeyPressed();
+    while(!WindowShouldClose() && !IsKeyPressed(KEY_ENTER) && !IsKeyPressed(KEY_ESCAPE))
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        int centroX = TAMANHO_HORIZONTAL / 2;
+        DrawText("=== TOP 10 RECORDISTAS ===", centroX - (MeasureText("=== TOP 10 RECORDISTAS ===", 28) / 2), 50, 28, GOLD);
+
+        // Margens fixas baseadas na largura de 800
+        int margemEsquerdaX = 150; // Nomes começam no pixel 150
+        int margemDireitaX = 630;  // Tempos terminam alinhados no
+       
+        for (int i = 0; i < 10; i++)
+        {
+                char textoPosicao[50];
+                char textoTempo[50];
+                int vazio = 0;
+                // Formata a string do nome com a posicao
+                sprintf(textoPosicao, "%02d. %s", i + 1, placar[i].nome[0] == '\0' ? "---" : placar[i].nome);
+                
+                if (placar[i].time == 9999) {
+                    sprintf(textoPosicao, "%02d. -----------------", i + 1);
+                    sprintf(textoTempo, "---");
+                    vazio = 1;
+                } else {
+                    sprintf(textoPosicao, "%02d. %s", i + 1, placar[i].nome);
+                    sprintf(textoTempo, "%f s", placar[i].time);
+                    vazio = 0;
+                }
+
+                
+
+                DrawText(textoPosicao,  margemEsquerdaX, 130 + (i * 35), 22, RAYWHITE);
+                DrawText(textoTempo, margemDireitaX - MeasureText(textoTempo, 22), 130  + (i * 35), 22, RED);
+        }
+        DrawText("Pressione ENTER para voltar ao Menu Principal", centroX - (MeasureText("Pressione ENTER para voltar ao Menu Principal", 16) / 2), TAMANHO_VERTICAL - 50, 16, GRAY);
+        EndDrawing();
     }
 }
 
@@ -356,7 +450,7 @@ int desenhaDerrota(void){
     while(!WindowShouldClose()){
     BeginDrawing();
     ClearBackground(BLACK);
-    DrawText("Você Perdeu!", MAPA_LARGURA/2 + 60, MAPA_ALTURA/2 + 200, 100, WHITE);
+    DrawText("Você Perdeu!", TAMANHO_HORIZONTAL/2 - 60, TAMANHO_VERTICAL/2 , 100, WHITE);
     DrawText("Pressione ENTER para continuar", MAPA_LARGURA/2 + 110, MAPA_ALTURA/2 + 300, 30, WHITE);
     EndDrawing();
     if(IsKeyPressed(KEY_ENTER)){
@@ -366,3 +460,4 @@ int desenhaDerrota(void){
 }
     return 0;
 }
+

@@ -46,7 +46,7 @@ typedef struct {
 typedef struct tipo_placar
 {
 char nome[20];
-int time;
+float time;
 } TIPO_PLACAR;
 
 //Declaracao das funcoes
@@ -71,9 +71,11 @@ void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], 
 int MenuPausa(void);
 
 // Funcoes para o placar
-void RegistraPlacar(TIPO_PLACAR placar[], int tempo, FILE *arq);
+void RegistraPlacar(TIPO_PLACAR placar[], float tempo, FILE *arq);
 void imprimePlacar(TIPO_PLACAR placar[]);
+void desenhaPlacarNaTela(TIPO_PLACAR placar[]);
 
+// Funcoes para desenhar as telas de vutoria e derrota 
 int desenhaVitoria(void);
 int desenhaDerrota(void);
 #endif

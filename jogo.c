@@ -39,9 +39,26 @@ int main()
     float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
     float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
 
-    int tempoInicio, tempoFinal;
+    float tempoInicio, tempoFinal;
     TIPO_PLACAR placar[10];
+
     FILE *arq = fopen("placar.bin", "rb+");
+    if (arq == NULL)
+    {
+        arq = fopen("placar.bin", "wb+");
+        if (arq == NULL)
+        {
+            printf("Erro ao criar o arquivo de placar.\n");
+            return 1;
+        }
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        placar[i].time = 9999; 
+        strcpy(placar[i].nome, ""); 
+    }
+    fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os dados salvos
+    imprimePlacar(placar);
 
     if (arq == NULL)
     {
@@ -145,6 +162,12 @@ int main()
                             }
                             else if (retornoPausa == 2)
                             {
+                                fclose(arq);
+                                UnloadTexture(texturas.escada);
+                                UnloadTexture(texturas.plataforma);
+                                UnloadTexture(texturas.porta);
+                                UnloadTexture(texturas.personagem);
+                                UnloadTexture(texturas.monstro);
                                 CloseWindow(); // Sai do jogo
                                 return 0;
                             }
@@ -166,18 +189,17 @@ int main()
                 {
                     retornoVitoria = desenhaVitoria();
                     if(retornoVitoria == 1){
-                    CloseWindow();
+                    
                     RegistraPlacar(placar, tempoFinal, arq);
                     imprimePlacar(placar);
-                    fclose(arq);
-                    return 0;
                     }
                 }
-                fclose(arq);
                 break;
+                case 1:
+                desenhaPlacarNaTela(placar);
         } // fim switch
     } // fim while WindowShouldClose
-
+    fclose(arq);
     UnloadTexture(texturas.escada);
     UnloadTexture(texturas.plataforma);
     UnloadTexture(texturas.porta);
