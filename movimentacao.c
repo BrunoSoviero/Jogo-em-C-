@@ -44,7 +44,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
         {
             if (x + 1 < MAPA_LARGURA && ((m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') || bombeiro->estaPulando))
             {
-                if (m[y][x + 1] != 'Z') //bloqueia entrar em parede
+                if (m[y][x + 1] != 'Z' && ((m[y - 1][x] != 'H' || m[y - 1][x] != 'D') && (m[y + 1][x] != 'S' || m[y + 1][x] != 'H'))) //bloqueia entrar em parede
                 {
                 bombeiro->posicao.x = x + 1;
                 bombeiro->tempoUltimoMovimento = tempoAtual;
@@ -162,7 +162,7 @@ int verificaColisaoMonstro(char m[MAPA_ALTURA][MAPA_LARGURA], Monstro* monstro, 
     return 0; // Nenhuma colisao detectada
 }
 
-void atualizaMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], TexturasJogo texturas, Boneco *b){ 
+int atualizaMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], TexturasJogo texturas, Boneco *b){ 
     float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA; 
     float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
     float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV; 
@@ -171,6 +171,7 @@ void atualizaMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], Textur
     movimentoMonstro(monstro, m, blocoTamanho);
     desenhaMonstro(monstro, texturas, blocoTamanho, comecoMapa);
     if(verificaColisaoMonstro(m, monstro, blocoTamanho, b)){
-        CloseWindow();
+        return 1;
     }
+    return 0;
 }

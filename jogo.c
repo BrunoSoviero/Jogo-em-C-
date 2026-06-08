@@ -138,12 +138,12 @@ int main()
                             tempoFinal = GetTime() - tempoInicio; // Calcula o tempo total do jogo
                         }
                     }
-                    else if (retornoJogo == 2)
-                    {
-                        retornoDerrota = desenhaDerrota();
-                        printf("Voce Perdeu!\n");
-                        fimDeJogo = 1; // Encerra o loop do jogo
-                    }
+                    //else if (retornoJogo == 2)
+                    //{
+                      //  retornoDerrota = desenhaDerrota();
+                       // printf("Voce Perdeu!\n");
+                        //fimDeJogo = 1; // Encerra o loop do jogo
+                    //}
 
                     if (!fimDeJogo)
                     {
@@ -180,7 +180,17 @@ int main()
                     desenhaMapa(texturas, m, &bombeiro);
                     for (int k = 0; k < numMonstros; k++)
                     {
-                        atualizaMonstro(&monstros[k], m, texturas, &bombeiro);
+                        if(!atualizaMonstro(&monstros[k], m, texturas, &bombeiro)){
+                            continue;
+                        }
+                        else{
+                            retornoDerrota = desenhaDerrota();
+                            if(retornoDerrota == 1){
+                                fimDeJogo = 1;
+                                desenhaPlacarNaTela(placar);
+                                break;
+                            }
+                        }
                     }
                     EndDrawing();
                 } // fim while loop do jogo

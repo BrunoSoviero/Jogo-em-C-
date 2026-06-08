@@ -372,6 +372,15 @@ void imprimePlacar(TIPO_PLACAR placar[]){
 
 void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
     GetKeyPressed();
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        EndDrawing();
+        
+        if (!IsKeyDown(KEY_ENTER))
+            break; // Só sai quando ENTER estiver completamente solto
+    }
     while(!WindowShouldClose() && !IsKeyPressed(KEY_ENTER) && !IsKeyPressed(KEY_ESCAPE))
     {
         BeginDrawing();
@@ -450,11 +459,10 @@ int desenhaDerrota(void){
     while(!WindowShouldClose()){
     BeginDrawing();
     ClearBackground(BLACK);
-    DrawText("Você Perdeu!", TAMANHO_HORIZONTAL/2 - (MeasureText("Você Perdeu!", 100) / 2), TAMANHO_VERTICAL/2 , 100, WHITE);
-    DrawText("Pressione ENTER para continuar", MAPA_LARGURA/2 - (MeasureText("Pressione ENTER para continuar", 30) /2), MAPA_ALTURA/2 + 300, 30, WHITE);
+    DrawText("Você Perdeu!", TAMANHO_HORIZONTAL/2 - (MeasureText("Você Perdeu!", 100) / 2), TAMANHO_VERTICAL/2 - 100, 100, WHITE);
+    DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL/2 - (MeasureText("Pressione ENTER para continuar", 30) /2), TAMANHO_VERTICAL/2 + 50, 30, WHITE);
     EndDrawing();
     if(IsKeyPressed(KEY_ENTER)){
-
         return 1;
     }
 }
