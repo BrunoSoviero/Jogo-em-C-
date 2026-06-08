@@ -34,7 +34,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
     {
         if (y - 1 >= 0)
         { // verifica se nao vai passar da borda
-            if (m[y - 1][x] == 'S' || m[y - 1][x] == 'H' || m[y - 1][x] == 'D')
+            if (m[y][x] == 'S' || m[y][x] == 'H')
             { // verifica se o bloco de cima é uma escada pra deixar subir
                 bombeiro->posicao.y = y - 1;
                 bombeiro->tempoUltimoMovimento = tempoAtual;
@@ -46,7 +46,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
     {
         if (y + 1 < MAPA_ALTURA)
         { // verifica se nao vai passar da borda
-            if ((m[y + 1][x] == 'H' || m[y + 1][x] == 'S'))
+            if ((m[y][x] == 'H' || m[y][x] == 'D'))
             { // verifica se o bloco de baixo é uma escada pra deixar descer
                 bombeiro->posicao.y = y + 1;
                 bombeiro->tempoUltimoMovimento = tempoAtual;
