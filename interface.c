@@ -450,8 +450,8 @@ int desenhaDerrota(void){
     while(!WindowShouldClose()){
     BeginDrawing();
     ClearBackground(BLACK);
-    DrawText("Você Perdeu!", TAMANHO_HORIZONTAL/2 - 60, TAMANHO_VERTICAL/2 , 100, WHITE);
-    DrawText("Pressione ENTER para continuar", MAPA_LARGURA/2 + 110, MAPA_ALTURA/2 + 300, 30, WHITE);
+    DrawText("Você Perdeu!", TAMANHO_HORIZONTAL/2 - (MeasureText("Você Perdeu!", 100) / 2), TAMANHO_VERTICAL/2 , 100, WHITE);
+    DrawText("Pressione ENTER para continuar", MAPA_LARGURA/2 - (MeasureText("Pressione ENTER para continuar", 30) /2), MAPA_ALTURA/2 + 300, 30, WHITE);
     EndDrawing();
     if(IsKeyPressed(KEY_ENTER)){
 

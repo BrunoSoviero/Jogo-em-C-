@@ -2,57 +2,87 @@
 
 int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
 {
-
     float tempoAtual = GetTime();
-
     // TRAVA DE VELOCIDADE
-    if (tempoAtual - bombeiro->tempoUltimoMovimento < bombeiro->velocidade){
-        return 0;
-    }
+    //if (tempoAtual - bombeiro->tempoUltimoMovimento < bombeiro->velocidade){
+     //   return 0;
+    //}
     int x = bombeiro->posicao.x;
     int y = bombeiro-> posicao.y;
-    if (IsKeyDown('D') || IsKeyDown(KEY_RIGHT))
+    bool podeAndar = (tempoAtual - bombeiro->tempoUltimoMovimento >= bombeiro->velocidade);
+    
+    if(bombeiro->estaPulando)
     {
-        if (x + 1 < MAPA_LARGURA && (m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') && (m[y + 1][x + 1] == 'H' || m[y + 1][x + 1] == 'Z'))
+        if (tempoAtual >= bombeiro->tempoInicioPulo + 0.35f)
         {
-            bombeiro->posicao.x = x + 1;
-            bombeiro->tempoUltimoMovimento = tempoAtual;
-            return 0;
+        if (m[y + 1][x] != 'Z') {
+            bombeiro->posicao.y = y + 1;
         }
-       
+        bombeiro->tempoUltimoMovimento = tempoAtual;
+        bombeiro->estaPulando = false;
+        }
+        else{
+            bombeiro->posicao.y = y;
+        }
+        
     }
-    if (IsKeyDown('A') || IsKeyDown(KEY_LEFT))
+    // se nao estiver pulando, pode  iniciar um novo pulo 
+    else if(IsKeyDown(KEY_SPACE))
     {
-        if (x - 1 >= 0 && (m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') && (m[y + 1][x - 1] == 'H' || m[y + 1][x - 1] == 'Z'))
+        if (y - 1 >= 0) 
         {
-            bombeiro->posicao.x = x - 1;
+            bombeiro->estaPulando = true;
+            bombeiro->tempoInicioPulo = tempoAtual;
+            bombeiro->posicao.y = y - 1; // Sobe
+            y = y - 1; // Atualiza a variável local
             bombeiro->tempoUltimoMovimento = tempoAtual;
-            return 0;
         }
     }
-    if (IsKeyDown('W') || IsKeyDown(KEY_UP))
-    {
-        if (y - 1 >= 0)
-        { // verifica se nao vai passar da borda
-            if (m[y][x] == 'S' || m[y][x] == 'H')
-            { // verifica se o bloco de cima é uma escada pra deixar subir
-                bombeiro->posicao.y = y - 1;
+    if(podeAndar){
+
+        if (IsKeyDown('D') || IsKeyDown(KEY_RIGHT))
+        {
+            if (x + 1 < MAPA_LARGURA && ((m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') || bombeiro->estaPulando))
+            {
+                if (m[y][x + 1] != 'Z') //bloqueia entrar em parede
+                {
+                bombeiro->posicao.x = x + 1;
                 bombeiro->tempoUltimoMovimento = tempoAtual;
-                return 0;
+                x = x + 1;
+                }
             }
         }
-    }
-    if (IsKeyDown('S') || IsKeyDown(KEY_DOWN))
-    {
-        if (y + 1 < MAPA_ALTURA)
-        { // verifica se nao vai passar da borda
-            if ((m[y][x] == 'H' || m[y][x] == 'D'))
-            { // verifica se o bloco de baixo é uma escada pra deixar descer
-                bombeiro->posicao.y = y + 1;
-                bombeiro->tempoUltimoMovimento = tempoAtual;
-                return 0;
+
+        else if (IsKeyDown('A') || IsKeyDown(KEY_LEFT))
+        {
+            if (x - 1 >= 0 && ((m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') || bombeiro->estaPulando))
+            {// so deixa se nao for o fim do mapa, se o bloco de baixo for um chao ou uma escada ou se o personagem estiver pulando
+                if (m[y][x - 1] != 'Z')// bloqueia entrar em parede
+                {
+                    bombeiro->posicao.x = x - 1;
+                    bombeiro->tempoUltimoMovimento = tempoAtual;
+                    x = x - 1;
+                }
+            }
         }
-    }
+
+        if (!bombeiro->estaPulando &&(IsKeyDown('W') || IsKeyDown(KEY_UP)))
+        {
+            if (y - 1 >= 0 && (m[y][x] == 'S' || m[y][x] == 'H'))
+            { // verifica se nao vai passar da borda e se é o comeco de uma escada ou uma escada
+                bombeiro->posicao.y = y - 1;
+                bombeiro->tempoUltimoMovimento = tempoAtual;
+            }
+        }
+    
+        else if (!bombeiro->estaPulando && (IsKeyDown('S') || IsKeyDown(KEY_DOWN)))
+        {
+            if (y + 1 < MAPA_ALTURA && (m[y][x] == 'H' || m[y][x] == 'D'))
+            { // verifica se nao vai passar da borda e se o bloco e o inicio da descida ou uma escada
+                    bombeiro->posicao.y = y + 1;
+                    bombeiro->tempoUltimoMovimento = tempoAtual;
+            }
+        }
     }
     if (IsKeyPressed(KEY_ENTER)){
         if(m[y][x] == 'F'){

@@ -31,6 +31,8 @@ typedef struct{
     int vida;
     float pontuacao;
     float tempoUltimoMovimento;
+    float tempoInicioPulo;
+    bool estaPulando;
 } Boneco; 
 
 typedef struct {
