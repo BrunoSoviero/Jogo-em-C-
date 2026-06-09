@@ -195,7 +195,7 @@ int main()
                         }
                         else
                         {
-                            if(bombeiro.vida == 0)
+                            if(bombeiro.vida == 1)
                             {
                                 fimDeJogo = 1;
                                 retornoDerrota = desenhaDerrota();
