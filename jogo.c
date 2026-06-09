@@ -42,19 +42,16 @@ int main()
 
     float tempoInicio, tempoFinal;
     TIPO_PLACAR placar[10];
-    int tempoDecorrido;
+    float tempoDecorrido;
     char textoTempo[50];
 
     FILE *arq = fopen("placar.bin", "rb+");
     if (arq == NULL)
-    {
-        arq = fopen("placar.bin", "wb+");
-        if (arq == NULL)
-        {
-            printf("Erro ao criar o arquivo de placar.\n");
-            return 1;
-        }
+    {   
+        printf("Erro ao criar o arquivo de placar.\n");
+        return 1;
     }
+    
     for (int i = 0; i < 10; i++)
     {
         placar[i].time = 9999; 
@@ -63,21 +60,12 @@ int main()
     fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os dados salvos
     imprimePlacar(placar);
 
-    if (arq == NULL)
-    {
-        arq = fopen("placar.bin", "wb+"); // cria o arquivo se não existir
-        if (arq == NULL)
-        {
-            printf("Erro ao criar o arquivo de placar.\n");
-            return 1;
-        }
-    }
-
     for (int i = 0; i < 10; i++)
     {
         placar[i].time = 9999; // Inicializa os tempos como 0
         strcpy(placar[i].nome, ""); // Inicializa os nomes como string vazia
     }
+    rewind(arq); // Volta para o início do arquivo para ler os placares existentes
     fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os placares existentes do arquivo
     imprimePlacar(placar); // Imprime o placar atual no console
 
@@ -182,8 +170,8 @@ int main()
                     BeginDrawing();
                     ClearBackground(BLACK);
                     desenhaMapa(texturas, m, &bombeiro);
-                    tempoDecorrido = (int)(GetTime() - tempoInicio);
-                    sprintf(textoTempo, "%d s", tempoDecorrido);
+                    tempoDecorrido = (float)(GetTime() - tempoInicio);
+                    sprintf(textoTempo, "%.2f s", tempoDecorrido);
                     int larguraTexto = MeasureText(textoTempo, 30); // MeasureText mede a largura do texto em pixels para alinhar à direita
                     DrawText(textoTempo, TAMANHO_HORIZONTAL - larguraTexto - 10, 10, 30, WHITE);
 

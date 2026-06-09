@@ -284,7 +284,7 @@ int MenuPausa(void)
 
 void RegistraPlacar(TIPO_PLACAR placar[], float tempoFinal, FILE *arq)
 {
-     char nome[20] = "\0";
+    char nome[20] = "\0";
     int contaLetra = 0;
     
     if(tempoFinal < placar[9].time){ // verifica se o tempo do jogador é melhor que o ultimo colocado no placar
@@ -292,7 +292,7 @@ void RegistraPlacar(TIPO_PLACAR placar[], float tempoFinal, FILE *arq)
         while (IsKeyDown(KEY_ENTER)) // debug para nao pegar o enter da tela de vitoria
         {
             BeginDrawing();
-                ClearBackground(BLACK);
+            ClearBackground(BLACK);
             EndDrawing();
         }
         while (GetCharPressed() > 0); // debug para esvaziar a fila de digitação
@@ -406,7 +406,7 @@ void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
                     vazio = 1;
                 } else {
                     sprintf(textoPosicao, "%02d. %s", i + 1, placar[i].nome);
-                    sprintf(textoTempo, "%f s", placar[i].time);
+                    sprintf(textoTempo, "%.2f s", placar[i].time);
                     vazio = 0;
                 }
 
