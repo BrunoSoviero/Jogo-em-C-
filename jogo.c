@@ -27,6 +27,7 @@ int main()
     bombeiro.posicao.x = 0;
     bombeiro.posicao.y = 0;
     bombeiro.velocidade = 0.15f;
+    bombeiro.vida = 3;
 
     Monstro monstros[10];
     int numMonstros = 0;
@@ -41,6 +42,8 @@ int main()
 
     float tempoInicio, tempoFinal;
     TIPO_PLACAR placar[10];
+    int tempoDecorrido;
+    char textoTempo[50];
 
     FILE *arq = fopen("placar.bin", "rb+");
     if (arq == NULL)
@@ -106,6 +109,7 @@ int main()
                 bombeiro.posicao.x = 0;
                 bombeiro.posicao.y = 0;
                 bombeiro.velocidade = 0.15f;
+                bombeiro.vida = 3;
                 carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
                 initMonstro(monstros, &numMonstros, m, blocoTamanho);
                 tempoInicio = GetTime(); // Inicia o tempo do jogo
@@ -178,16 +182,34 @@ int main()
                     BeginDrawing();
                     ClearBackground(BLACK);
                     desenhaMapa(texturas, m, &bombeiro);
+                    tempoDecorrido = (int)(GetTime() - tempoInicio);
+                    sprintf(textoTempo, "%d s", tempoDecorrido);
+                    int larguraTexto = MeasureText(textoTempo, 30); // MeasureText mede a largura do texto em pixels para alinhar à direita
+                    DrawText(textoTempo, TAMANHO_HORIZONTAL - larguraTexto - 10, 10, 30, WHITE);
+
                     for (int k = 0; k < numMonstros; k++)
                     {
-                        if(!atualizaMonstro(&monstros[k], m, texturas, &bombeiro)){
+                        if(!atualizaMonstro(&monstros[k], m, texturas, &bombeiro))
+                        {
                             continue;
                         }
-                        else{
-                            retornoDerrota = desenhaDerrota();
-                            if(retornoDerrota == 1){
+                        else
+                        {
+                            if(bombeiro.vida == 0)
+                            {
                                 fimDeJogo = 1;
-                                desenhaPlacarNaTela(placar);
+                                retornoDerrota = desenhaDerrota();
+                                if(retornoDerrota == 1)
+                                {
+                                    fimDeJogo = 1;
+                                    desenhaPlacarNaTela(placar);
+                                    break;
+                                }
+                            }else
+                            {
+                                bombeiro.vida--;
+                                reiniciaFase(m, &bombeiro, faseAtual);
+                                initMonstro(monstros, &numMonstros, m, blocoTamanho);
                                 break;
                             }
                         }

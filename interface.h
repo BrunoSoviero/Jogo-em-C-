@@ -80,4 +80,8 @@ void desenhaPlacarNaTela(TIPO_PLACAR placar[]);
 // Funcoes para desenhar as telas de vutoria e derrota 
 int desenhaVitoria(void);
 int desenhaDerrota(void);
+
+//Funcao pra reniciar a fase 
+void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual);
+
 #endif

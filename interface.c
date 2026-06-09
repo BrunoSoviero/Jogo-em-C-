@@ -468,4 +468,18 @@ int desenhaDerrota(void){
 }
     return 0;
 }
-
+void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual)
+{
+    if(faseAtual == 1)
+    {
+        carregaMapa("mapas/Mapa1.txt", m, bombeiro);
+    }
+    else if(faseAtual == 2)
+    {
+        carregaMapa("mapas/Mapa2.txt", m, bombeiro);
+    }
+    else if(faseAtual == 3)
+    {
+        carregaMapa("mapas/Mapa3.txt", m, bombeiro);
+    }
+}
