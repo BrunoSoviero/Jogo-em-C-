@@ -15,6 +15,7 @@ int main()
     texturas.personagem = LoadTexture("graficos/personagem.png");
     texturas.monstro = LoadTexture("graficos/monstro.png");
     texturas.fundo = LoadTexture("graficos/fundo.png");
+    texturas.coracao = LoadTexture("graficos/coracao.png");
 
     // Inicializa as variaveis para o funcinamento do jogo
     int retornoMenu;
@@ -57,7 +58,7 @@ int main()
         placar[i].time = 9999; 
         strcpy(placar[i].nome, ""); 
     }
-    
+
     for (int i = 0; i < 10; i++)
     {
         placar[i].time = 9999; // Inicializa os tempos como 0
@@ -172,6 +173,7 @@ int main()
                     sprintf(textoTempo, "%.2f s", tempoDecorrido);
                     int larguraTexto = MeasureText(textoTempo, 30); // MeasureText mede a largura do texto em pixels para alinhar à direita
                     DrawText(textoTempo, TAMANHO_HORIZONTAL - larguraTexto - 10, 10, 30, WHITE);
+                    desenhaCoracao(texturas, bombeiro);
 
                     for (int k = 0; k < numMonstros; k++)
                     {
@@ -223,6 +225,7 @@ int main()
     UnloadTexture(texturas.porta);
     UnloadTexture(texturas.personagem);
     UnloadTexture(texturas.monstro);
+    UnloadTexture(texturas.coracao);
     CloseWindow();
 
     return 0;

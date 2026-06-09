@@ -483,3 +483,12 @@ void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseA
         carregaMapa("mapas/Mapa3.txt", m, bombeiro);
     }
 }
+void desenhaCoracao(TexturasJogo text, Boneco bombeiro)
+{
+    for (int i = 0; i < bombeiro.vida; i++) // desenha um coração para cada vida do bombeiro
+    {
+        Rectangle origem = {0, 0, text.coracao.width, text.coracao.height};
+        Rectangle destino = {10 + (i * 30 + 10), 10, 40, 40};
+        DrawTexturePro(text.coracao, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+    }
+}

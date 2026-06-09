@@ -23,6 +23,7 @@ typedef struct{
     Texture2D personagem;
     Texture2D monstro;
     Texture2D fundo;
+    Texture2D coracao;
 } TexturasJogo; // define as texturas do jogo
 
 typedef struct{
@@ -40,7 +41,7 @@ typedef struct {
     float y;
     float velocidade;
     int direcao; // 1 = direita, -1 = esquerda
-        Texture2D textura;
+    Texture2D textura;
     float tempoUltimoMovimento;
     float delayMovimento;
 } Monstro;
@@ -83,5 +84,8 @@ int desenhaDerrota(void);
 
 //Funcao pra reniciar a fase 
 void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual);
+
+//Funcao para desenhar o coração
+void desenhaCoracao(TexturasJogo text, Boneco bombeiro);
 
 #endif
