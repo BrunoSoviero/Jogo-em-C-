@@ -95,7 +95,7 @@ int main()
                 retornoJogo = 0;
                 bombeiro.posicao.x = 0;
                 bombeiro.posicao.y = 0;
-                bombeiro.velocidade = 0.15f;
+                bombeiro.velocidade = 0.075f;
                 bombeiro.vida = 3;
                 carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
                 initMonstro(monstros, &numMonstros, m, blocoTamanho);
