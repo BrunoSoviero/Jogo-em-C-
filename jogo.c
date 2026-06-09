@@ -57,9 +57,7 @@ int main()
         placar[i].time = 9999; 
         strcpy(placar[i].nome, ""); 
     }
-    fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os dados salvos
-    imprimePlacar(placar);
-
+    
     for (int i = 0; i < 10; i++)
     {
         placar[i].time = 9999; // Inicializa os tempos como 0
