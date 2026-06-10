@@ -4,8 +4,8 @@
 #include <stdio.h> 
 
 #define FPS 60
-#define TAMANHO_HORIZONTAL 1200
-#define TAMANHO_VERTICAL 900
+#define TAMANHO_HORIZONTAL 800
+#define TAMANHO_VERTICAL 600
 #define NUM_FRAMES 3
 #define MAPA_ALTURA 30
 #define MAPA_LARGURA 30
