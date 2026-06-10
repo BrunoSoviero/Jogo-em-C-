@@ -85,7 +85,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
         }
     }
     if (IsKeyPressed(KEY_ENTER)){
-        if(m[y][x] == 'F'){
+        if(m[y][x] == 'F' || m[y][x] == 'L'){
             return 1;
         }
     }
@@ -98,11 +98,11 @@ return 0;
     for(int i = 0; i < MAPA_ALTURA; i++){ // Percorre o mapa para encontrar os monstros
         for(int j = 0; j < MAPA_LARGURA; j++){ 
             if(m[i][j] == 'M'){ // Se encontrar um monstro, inicializa suas propriedades
-                monstros[*numMonstros].velocidade = 1.0f;
+                monstros[*numMonstros].velocidade = 0.2f;
                 monstros[*numMonstros].direcao = 1;
                 monstros[*numMonstros].textura = LoadTexture("graficos/monstro.png");
                 monstros[*numMonstros].tempoUltimoMovimento = 0.0f;
-                monstros[*numMonstros].delayMovimento = 0.2f;
+                monstros[*numMonstros].delayMovimento = 0.0f;
                 monstros[*numMonstros].x = j * blocoTamanho;
                 monstros[*numMonstros].y = i * blocoTamanho;
 

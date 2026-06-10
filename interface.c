@@ -114,7 +114,12 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
                 Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
                 DrawTexturePro(text.porta, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
             }
-            
+             if (m[y][x] == 'L') // verifica se é uma porta e desenha a escada
+            {
+                Rectangle origem = {0, 0, text.menina.width, text.menina.height};
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
+                DrawTexturePro(text.menina, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
         }
     }
 
@@ -284,7 +289,7 @@ int MenuPausa(void)
 
 void RegistraPlacar(TIPO_PLACAR placar[], float tempoFinal, FILE *arq)
 {
-     char nome[20] = "\0";
+    char nome[20] = "\0";
     int contaLetra = 0;
     
     if(tempoFinal < placar[9].time){ // verifica se o tempo do jogador é melhor que o ultimo colocado no placar
@@ -292,7 +297,7 @@ void RegistraPlacar(TIPO_PLACAR placar[], float tempoFinal, FILE *arq)
         while (IsKeyDown(KEY_ENTER)) // debug para nao pegar o enter da tela de vitoria
         {
             BeginDrawing();
-                ClearBackground(BLACK);
+            ClearBackground(BLACK);
             EndDrawing();
         }
         while (GetCharPressed() > 0); // debug para esvaziar a fila de digitação
@@ -406,7 +411,7 @@ void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
                     vazio = 1;
                 } else {
                     sprintf(textoPosicao, "%02d. %s", i + 1, placar[i].nome);
-                    sprintf(textoTempo, "%f s", placar[i].time);
+                    sprintf(textoTempo, "%.2f s", placar[i].time);
                     vazio = 0;
                 }
 
@@ -434,8 +439,8 @@ int desenhaVitoria(void){
     while(!WindowShouldClose()){
     BeginDrawing();
     ClearBackground(BLACK);
-    DrawText("Você Ganhou!", MAPA_LARGURA/2 + 60, MAPA_ALTURA/2 + 200, 100, WHITE);
-    DrawText("Pressione ENTER para continuar", MAPA_LARGURA/2 + 110, MAPA_ALTURA/2 + 300, 30, WHITE);
+    DrawText("Você Ganhou!", TAMANHO_HORIZONTAL/2 + 60, TAMANHO_VERTICAL/2 + 200, 100, WHITE);
+    DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL/2 + 110, TAMANHO_VERTICAL/2 + 300, 30, WHITE);
     EndDrawing();
     if(IsKeyPressed(KEY_ENTER)){
 
@@ -468,4 +473,27 @@ int desenhaDerrota(void){
 }
     return 0;
 }
-
+void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual)
+{
+    if(faseAtual == 1)
+    {
+        carregaMapa("mapas/Mapa1.txt", m, bombeiro);
+    }
+    else if(faseAtual == 2)
+    {
+        carregaMapa("mapas/Mapa2.txt", m, bombeiro);
+    }
+    else if(faseAtual == 3)
+    {
+        carregaMapa("mapas/Mapa3.txt", m, bombeiro);
+    }
+}
+void desenhaCoracao(TexturasJogo text, Boneco bombeiro)
+{
+    for (int i = 0; i < bombeiro.vida; i++) // desenha um coração para cada vida do bombeiro
+    {
+        Rectangle origem = {0, 0, text.coracao.width, text.coracao.height};
+        Rectangle destino = {10 + (i * 30 + 10), 10, 40, 40};
+        DrawTexturePro(text.coracao, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+    }
+}

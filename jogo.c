@@ -15,7 +15,8 @@ int main()
     texturas.personagem = LoadTexture("graficos/personagem.png");
     texturas.monstro = LoadTexture("graficos/monstro.png");
     texturas.fundo = LoadTexture("graficos/fundo.png");
-
+    texturas.coracao = LoadTexture("graficos/coracao.png");
+    texturas.menina = LoadTexture("graficos/menina.png");
     // Inicializa as variaveis para o funcinamento do jogo
     int retornoMenu;
     int retornoVitoria = 0;
@@ -27,6 +28,7 @@ int main()
     bombeiro.posicao.x = 0;
     bombeiro.posicao.y = 0;
     bombeiro.velocidade = 0.15f;
+    bombeiro.vida = 3;
 
     Monstro monstros[10];
     int numMonstros = 0;
@@ -41,33 +43,20 @@ int main()
 
     float tempoInicio, tempoFinal;
     TIPO_PLACAR placar[10];
+    float tempoDecorrido;
+    char textoTempo[50];
 
     FILE *arq = fopen("placar.bin", "rb+");
     if (arq == NULL)
-    {
-        arq = fopen("placar.bin", "wb+");
-        if (arq == NULL)
-        {
-            printf("Erro ao criar o arquivo de placar.\n");
-            return 1;
-        }
+    {   
+        printf("Erro ao criar o arquivo de placar.\n");
+        return 1;
     }
+    
     for (int i = 0; i < 10; i++)
     {
         placar[i].time = 9999; 
         strcpy(placar[i].nome, ""); 
-    }
-    fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os dados salvos
-    imprimePlacar(placar);
-
-    if (arq == NULL)
-    {
-        arq = fopen("placar.bin", "wb+"); // cria o arquivo se não existir
-        if (arq == NULL)
-        {
-            printf("Erro ao criar o arquivo de placar.\n");
-            return 1;
-        }
     }
 
     for (int i = 0; i < 10; i++)
@@ -75,9 +64,10 @@ int main()
         placar[i].time = 9999; // Inicializa os tempos como 0
         strcpy(placar[i].nome, ""); // Inicializa os nomes como string vazia
     }
+    rewind(arq); // Volta para o início do arquivo para ler os placares existentes
     fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os placares existentes do arquivo
     imprimePlacar(placar); // Imprime o placar atual no console
-
+    
     while (!WindowShouldClose())
     {
         if (!voltouPausa)
@@ -105,7 +95,8 @@ int main()
                 retornoJogo = 0;
                 bombeiro.posicao.x = 0;
                 bombeiro.posicao.y = 0;
-                bombeiro.velocidade = 0.15f;
+                bombeiro.velocidade = 0.075f;
+                bombeiro.vida = 3;
                 carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
                 initMonstro(monstros, &numMonstros, m, blocoTamanho);
                 tempoInicio = GetTime(); // Inicia o tempo do jogo
@@ -178,16 +169,35 @@ int main()
                     BeginDrawing();
                     ClearBackground(BLACK);
                     desenhaMapa(texturas, m, &bombeiro);
+                    tempoDecorrido = (float)(GetTime() - tempoInicio);
+                    sprintf(textoTempo, "%.2f s", tempoDecorrido);
+                    int larguraTexto = MeasureText(textoTempo, 30); // MeasureText mede a largura do texto em pixels para alinhar à direita
+                    DrawText(textoTempo, TAMANHO_HORIZONTAL - larguraTexto - 10, 10, 30, WHITE);
+                    desenhaCoracao(texturas, bombeiro);
+
                     for (int k = 0; k < numMonstros; k++)
                     {
-                        if(!atualizaMonstro(&monstros[k], m, texturas, &bombeiro)){
+                        if(!atualizaMonstro(&monstros[k], m, texturas, &bombeiro))
+                        {
                             continue;
                         }
-                        else{
-                            retornoDerrota = desenhaDerrota();
-                            if(retornoDerrota == 1){
+                        else
+                        {
+                            if(bombeiro.vida == 1)
+                            {
                                 fimDeJogo = 1;
-                                desenhaPlacarNaTela(placar);
+                                retornoDerrota = desenhaDerrota();
+                                if(retornoDerrota == 1)
+                                {
+                                    fimDeJogo = 1;
+                                    desenhaPlacarNaTela(placar);
+                                    break;
+                                }
+                            }else
+                            {
+                                bombeiro.vida--;
+                                reiniciaFase(m, &bombeiro, faseAtual);
+                                initMonstro(monstros, &numMonstros, m, blocoTamanho);
                                 break;
                             }
                         }
@@ -215,6 +225,7 @@ int main()
     UnloadTexture(texturas.porta);
     UnloadTexture(texturas.personagem);
     UnloadTexture(texturas.monstro);
+    UnloadTexture(texturas.coracao);
     CloseWindow();
 
     return 0;

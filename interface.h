@@ -4,8 +4,8 @@
 #include <stdio.h> 
 
 #define FPS 60
-#define TAMANHO_HORIZONTAL 800
-#define TAMANHO_VERTICAL 600
+#define TAMANHO_HORIZONTAL 1200
+#define TAMANHO_VERTICAL 900
 #define NUM_FRAMES 3
 #define MAPA_ALTURA 30
 #define MAPA_LARGURA 30
@@ -23,6 +23,8 @@ typedef struct{
     Texture2D personagem;
     Texture2D monstro;
     Texture2D fundo;
+    Texture2D coracao;
+    Texture2D menina;
 } TexturasJogo; // define as texturas do jogo
 
 typedef struct{
@@ -40,7 +42,7 @@ typedef struct {
     float y;
     float velocidade;
     int direcao; // 1 = direita, -1 = esquerda
-        Texture2D textura;
+    Texture2D textura;
     float tempoUltimoMovimento;
     float delayMovimento;
 } Monstro;
@@ -80,4 +82,11 @@ void desenhaPlacarNaTela(TIPO_PLACAR placar[]);
 // Funcoes para desenhar as telas de vutoria e derrota 
 int desenhaVitoria(void);
 int desenhaDerrota(void);
+
+//Funcao pra reniciar a fase 
+void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual);
+
+//Funcao para desenhar o coração
+void desenhaCoracao(TexturasJogo text, Boneco bombeiro);
+
 #endif
