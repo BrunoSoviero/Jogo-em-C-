@@ -120,6 +120,12 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
                 Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
                 DrawTexturePro(text.menina, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
             }
+            if (m[y][x] == 'E') // verifica se é uma porta e desenha a escada
+            {
+                Rectangle origem = {0, 0, text.moeda.width, text.moeda.height};
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
+                DrawTexturePro(text.moeda  , origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
         }
     }
 

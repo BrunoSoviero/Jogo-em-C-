@@ -17,6 +17,7 @@ int main()
     texturas.fundo = LoadTexture("graficos/fundo.png");
     texturas.coracao = LoadTexture("graficos/coracao.png");
     texturas.menina = LoadTexture("graficos/menina.png");
+    texturas.moeda = LoadTexture("graficos/especial.png");
     // Inicializa as variaveis para o funcinamento do jogo
     int retornoMenu;
     int retornoVitoria = 0;

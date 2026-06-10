@@ -25,6 +25,7 @@ typedef struct{
     Texture2D fundo;
     Texture2D coracao;
     Texture2D menina;
+    Texture2D moeda;
 } TexturasJogo; // define as texturas do jogo
 
 typedef struct{
@@ -35,6 +36,8 @@ typedef struct{
     float tempoUltimoMovimento;
     float tempoInicioPulo;
     bool estaPulando;
+    float tempoEspecial;
+    bool especial;
 } Boneco; 
 
 typedef struct {

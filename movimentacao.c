@@ -86,6 +86,15 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
             return 1;
         }
     }
+
+    if(m[y][x] == 'E'){
+        m[y][x] = '.';
+        bombeiro->tempoEspecial = GetTime();
+        bombeiro->especial = true;
+    }
+    if(GetTime() > bombeiro->tempoEspecial + 10){
+        bombeiro->especial = false;
+    }
 return 0;
 }
 
@@ -150,7 +159,7 @@ int verificaColisaoMonstro(char m[MAPA_ALTURA][MAPA_LARGURA], Monstro* monstro, 
             if(y == b->posicao.y && x == b->posicao.x){
                 int monstroGridX = (int)(monstro->x / blocoTamanho);
                 int monstroGridY = (int)(monstro->y / blocoTamanho);
-                if(monstroGridX == x && monstroGridY == y){
+                if(monstroGridX == x && monstroGridY == y && (b->especial == false)){
                     return 1; // Colisao detectada
                 }
             }
