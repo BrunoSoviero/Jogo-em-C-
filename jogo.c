@@ -26,6 +26,7 @@ int main()
     int voltouPausa = 0;
     int retornoDerrota = 0;
     int venceu = 0;
+    float tempoPenalidade = 0.0f;
     char m[MAPA_ALTURA][MAPA_LARGURA];
     Boneco bombeiro;
     bombeiro.posicao.x = 0;
@@ -104,6 +105,7 @@ int main()
                 bombeiro.posicao.y = 0;
                 bombeiro.velocidade = 0.075f;
                 bombeiro.vida = 3;
+                tempoPenalidade = 0.0f;
                 carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
                 initMonstro(monstros, &numMonstros, m, blocoTamanho);
                 tempoInicio = GetTime(); // Inicia o tempo do jogo
@@ -134,7 +136,7 @@ int main()
                             printf("Parabens! Voce fechou o jogo inteiro!\n");
                             fimDeJogo = 1;
                             venceu = 1;
-                            tempoFinal = GetTime() - tempoInicio; // Calcula o tempo total do jogo
+                            tempoFinal = (GetTime() - tempoInicio) + tempoPenalidade; // Calcula o tempo total do jogo
                         }
                     }
                     //else if (retornoJogo == 2)
@@ -178,7 +180,7 @@ int main()
                     ClearBackground(BLACK);
                     DrawTexture(background, 0, 0, WHITE);
                     desenhaMapa(texturas, m, &bombeiro);
-                    tempoDecorrido = (float)(GetTime() - tempoInicio);
+                    tempoDecorrido = (float)(GetTime() - tempoInicio) + tempoPenalidade;
                     sprintf(textoTempo, "%.2f s", tempoDecorrido);
                     int larguraTexto = MeasureText(textoTempo, 30); // MeasureText mede a largura do texto em pixels para alinhar à direita
                     DrawText(textoTempo, TAMANHO_HORIZONTAL - larguraTexto - 10, 10, 30, WHITE);
@@ -205,6 +207,7 @@ int main()
                             }else
                             {
                                 bombeiro.vida--;
+                                tempoPenalidade += 3.0;
                                 reiniciaFase(m, &bombeiro, faseAtual);
                                 initMonstro(monstros, &numMonstros, m, blocoTamanho);
                                 break;

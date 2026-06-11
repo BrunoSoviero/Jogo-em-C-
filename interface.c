@@ -503,8 +503,8 @@ int desenhaVitoria(void){
     while(!WindowShouldClose()){
     BeginDrawing();
     ClearBackground(BLACK);
-    DrawText("Você Ganhou!", TAMANHO_HORIZONTAL/2 - (MeasureText("Você Ganhou!", 100)) / 2, TAMANHO_VERTICAL/2, 100, WHITE);
-    DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL/2 - (MeasureText("Pressione ENTER para continuar", 30)) / 2, TAMANHO_VERTICAL/2 + 150, 30, WHITE);
+    DrawText("Você Ganhou!", TAMANHO_HORIZONTAL/2 - (MeasureText("Você Ganhou!", 100)) / 2, TAMANHO_VERTICAL/2 - 50, 100, WHITE);
+    DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL/2 - (MeasureText("Pressione ENTER para continuar", 30)) / 2, TAMANHO_VERTICAL/2 + 50, 30, WHITE);
     EndDrawing();
     if(IsKeyPressed(KEY_ENTER)){
 
