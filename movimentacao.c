@@ -118,7 +118,6 @@ return 0;
         }
     }
 }
-
 void movimentoMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], float blocoTamanho){
     float tempoAtual = GetTime();
     if (tempoAtual - monstro->tempoUltimoMovimento < monstro->delayMovimento) { 
@@ -145,6 +144,7 @@ void movimentoMonstro(Monstro* monstro, char m[MAPA_ALTURA][MAPA_LARGURA], float
 
     monstro->tempoUltimoMovimento = tempoAtual;
 }
+
 
 void desenhaMonstro(Monstro* monstro, TexturasJogo texturas, float blocoTamanho, float comecoMapa){ // Desenha o monstro na tela
 Rectangle origem = {0, 0, monstro->textura.width, monstro->textura.height}; 
