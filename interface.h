@@ -68,15 +68,16 @@ void InitBotao(Botao* btn, const char* caminhoTextura, Vector2 pos, float scale)
 void UnloadBotao(Botao* btn);
 // Desenha um botao
 void desenhaBotao(Botao* btn);
+// Verifica se o botao esta pressionado
 bool botaoPressionado(Vector2 mousePos, Botao* btn, bool mousePressionado);
-
-
+// Cria o menu de pausa
+int MenuPausa(void);
+//Funcao pra reniciar a fase 
+void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual);
 // Funcoes para desenhar os mapas 
 void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro);
 void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro);
 
-// Funcao para o menu de pausa
-int MenuPausa(void);
 
 // Funcoes para o placar
 void RegistraPlacar(TIPO_PLACAR placar[], float tempo, FILE *arq);
@@ -87,8 +88,7 @@ void desenhaPlacarNaTela(TIPO_PLACAR placar[]);
 int desenhaVitoria(void);
 int desenhaDerrota(void);
 
-//Funcao pra reniciar a fase 
-void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual);
+
 
 //Funcao para desenhar o coração
 void desenhaCoracao(TexturasJogo text, Boneco bombeiro);

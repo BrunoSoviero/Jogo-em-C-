@@ -48,6 +48,10 @@ int main()
     float tempoDecorrido;
     char textoTempo[50];
 
+    Image imgFundo = LoadImage("graficos/fundo.png");
+    ImageResize(&imgFundo, TAMANHO_HORIZONTAL, TAMANHO_VERTICAL);
+    Texture2D background = LoadTextureFromImage(imgFundo);
+    
     FILE *arq = fopen("placar.bin", "rb+");
     if (arq == NULL)
     {   
@@ -170,6 +174,7 @@ int main()
                     // Desenha o mapa e o monstro atualizado
                     BeginDrawing();
                     ClearBackground(BLACK);
+                    DrawTexture(background, 0, 0, WHITE);
                     desenhaMapa(texturas, m, &bombeiro);
                     tempoDecorrido = (float)(GetTime() - tempoInicio);
                     sprintf(textoTempo, "%.2f s", tempoDecorrido);

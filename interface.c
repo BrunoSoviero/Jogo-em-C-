@@ -2,7 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 
+
+/*  =====================================================================================================
+
+                FUNCOES PARA O MENU
+
+==========================================================================================================*/
 /*Cria um menu de opções para comecar o jogo*/
+
 int Menu(void)
 {
     // Carrega a textura do fundo do menu
@@ -78,106 +85,6 @@ int Menu(void)
 }
 
 
-// *** Cria o mapa para jogar o jogo
-void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* bombeiro){
-    int i, j;
-    int x, y;
-    // pega o tamanho da tela pra ajustar o mapa
-    float larguraTela = GetScreenWidth();
-    float alturaTela = GetScreenHeight();
-    // ajusta o bloco pro tamamnho da tela
-    float blocoTamanhoH = alturaTela  / MAPA_ALTURA;
-    float blocoTamanhoV = larguraTela / MAPA_LARGURA;
-    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
-
-    float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho))/ 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
-
-    for (y = 0; y < MAPA_ALTURA; y++)
-    {
-        for (x = 0; x < MAPA_LARGURA; x++)
-        {
-            if (m[y][x] == 'Z') // Verifica se é uma plataforma e desenha a plataforma
-            {
-                Rectangle origem = {0, 0, text.plataforma.width, text.plataforma.height}; // recorta o tamanho da imagem original
-                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho}; //posicao e o tamamnho que a imagem tera na tela
-                DrawTexturePro(text.plataforma, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-            }
-            if (m[y][x] == 'H' || m[y][x] == 'S') // verifica se é uma escada e desenha a escada
-            {
-                Rectangle origem = {0, 0, text.escada.width, text.escada.height};
-                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
-                DrawTexturePro(text.escada, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-            }
-            if (m[y][x] == 'F') // verifica se é uma porta e desenha a escada
-            {
-                Rectangle origem = {0, 0, text.porta.width, text.porta.height};
-                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
-                DrawTexturePro(text.porta, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-            }
-             if (m[y][x] == 'L') // verifica se é uma porta e desenha a escada
-            {
-                Rectangle origem = {0, 0, text.menina.width, text.menina.height};
-                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
-                DrawTexturePro(text.menina, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-            }
-            if (m[y][x] == 'E') // verifica se é uma porta e desenha a escada
-            {
-                Rectangle origem = {0, 0, text.moeda.width, text.moeda.height};
-                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
-                DrawTexturePro(text.moeda  , origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-            }
-        }
-    }
-    if(bombeiro->especial){
-        Rectangle origemP = {0, 0, text.molhado.width, text.molhado.height};
-    Rectangle destinoP = {
-        comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
-        bombeiro->posicao.y * blocoTamanho, 
-        blocoTamanho, 
-        blocoTamanho
-    };
-    DrawTexturePro(text.molhado, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
-    }
-    else{
-    Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
-    Rectangle destinoP = {
-        comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
-        bombeiro->posicao.y * blocoTamanho, 
-        blocoTamanho, 
-        blocoTamanho
-    };
-    DrawTexturePro(text.personagem, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
-}
-}
-
-void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro){
-    
-    FILE *arquivo = fopen(caminhoArquivo, "r");
-
-    char buffer[256]; 
-    for (int i = 0; i < MAPA_ALTURA; i++) // LE O MAPA TXT
-    {
-        if(fgets(buffer, sizeof(buffer), arquivo) == NULL) break;
-        
-        // Remove \n e \r
-        buffer[strcspn(buffer, "\r\n")] = '\0';
-        
-        // Copia só os primeiros MAPA_LARGURA caracteres pro mapa
-        strncpy(m[i], buffer, MAPA_LARGURA);
-        m[i][MAPA_LARGURA - 1] = '\0'; // garante terminação
-    }
-    
-    for (int y = 0; y < MAPA_ALTURA; y++) {
-        for (int x = 0; x < MAPA_LARGURA; x++) {
-            if (m[y][x] == 'P') {
-                bombeiro->posicao.x = x;
-                bombeiro->posicao.y = y;
-                m[y][x] = '.'; 
-            }
-        }
-    }
-    fclose(arquivo);
-}
 
 void InitBotao(Botao* btn, const char* caminhoTextura, Vector2 pos, float scale)
 {
@@ -302,7 +209,142 @@ int MenuPausa(void)
     CloseWindow();
     return 2;
 }
+/* ===========================================================================================
 
+                        FUNCOES PARA DESENHAR O MAPA
+
+===============================================================================================*/
+
+// *** Cria o mapa para jogar o jogo
+void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* bombeiro){
+    int i, j;
+    int x, y;
+    // pega o tamanho da tela pra ajustar o mapa
+    float larguraTela = GetScreenWidth();
+    float alturaTela = GetScreenHeight();
+    // ajusta o bloco pro tamamnho da tela
+    float blocoTamanhoH = alturaTela  / MAPA_ALTURA;
+    float blocoTamanhoV = larguraTela / MAPA_LARGURA;
+    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
+    float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho))/ 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
+    
+    for (y = 0; y < MAPA_ALTURA; y++)
+    {
+        for (x = 0; x < MAPA_LARGURA; x++)
+        {
+            if (m[y][x] == 'Z') // Verifica se é uma plataforma e desenha a plataforma
+            {
+                Rectangle origem = {0, 0, text.plataforma.width, text.plataforma.height}; // recorta o tamanho da imagem original
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho}; //posicao e o tamamnho que a imagem tera na tela
+                DrawTexturePro(text.plataforma, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
+            if (m[y][x] == 'H' || m[y][x] == 'S') // verifica se é uma escada e desenha a escada
+            {
+                Rectangle origem = {0, 0, text.escada.width, text.escada.height};
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
+                DrawTexturePro(text.escada, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
+            if (m[y][x] == 'F') // verifica se é uma porta e desenha a escada
+            {
+                Rectangle origem = {0, 0, text.porta.width, text.porta.height};
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
+                DrawTexturePro(text.porta, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
+             if (m[y][x] == 'L') // verifica se é uma porta e desenha a escada
+            {
+                Rectangle origem = {0, 0, text.menina.width, text.menina.height};
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
+                DrawTexturePro(text.menina, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
+            if (m[y][x] == 'E') // verifica se é uma porta e desenha a escada
+            {
+                Rectangle origem = {0, 0, text.moeda.width, text.moeda.height};
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
+                DrawTexturePro(text.moeda  , origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+            }
+        }
+    }
+    if(bombeiro->especial){
+        Rectangle origemP = {0, 0, text.molhado.width, text.molhado.height};
+    Rectangle destinoP = {
+        comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
+        bombeiro->posicao.y * blocoTamanho, 
+        blocoTamanho, 
+        blocoTamanho
+    };
+    DrawTexturePro(text.molhado, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
+    }
+    else{
+    Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
+    Rectangle destinoP = {
+        comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
+        bombeiro->posicao.y * blocoTamanho, 
+        blocoTamanho, 
+        blocoTamanho
+    };
+    DrawTexturePro(text.personagem, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
+}
+}
+
+void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro){
+    
+    FILE *arquivo = fopen(caminhoArquivo, "r");
+
+    char buffer[256]; 
+    for (int i = 0; i < MAPA_ALTURA; i++) // LE O MAPA TXT
+    {
+        if(fgets(buffer, sizeof(buffer), arquivo) == NULL) break;
+        
+        // Remove \n e \r
+        buffer[strcspn(buffer, "\r\n")] = '\0';
+        
+        // Copia só os primeiros MAPA_LARGURA caracteres pro mapa
+        strncpy(m[i], buffer, MAPA_LARGURA);
+        m[i][MAPA_LARGURA - 1] = '\0'; // garante terminação
+    }
+    
+    for (int y = 0; y < MAPA_ALTURA; y++) {
+        for (int x = 0; x < MAPA_LARGURA; x++) {
+            if (m[y][x] == 'P') {
+                bombeiro->posicao.x = x;
+                bombeiro->posicao.y = y;
+                m[y][x] = '.'; 
+            }
+        }
+    }
+    fclose(arquivo);
+}
+
+void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual)
+{
+    if(faseAtual == 1)
+    {
+        carregaMapa("mapas/Mapa1.txt", m, bombeiro);
+    }
+    else if(faseAtual == 2)
+    {
+        carregaMapa("mapas/Mapa2.txt", m, bombeiro);
+    }
+    else if(faseAtual == 3)
+    {
+        carregaMapa("mapas/Mapa3.txt", m, bombeiro);
+    }
+}
+
+void desenhaCoracao(TexturasJogo text, Boneco bombeiro)
+{
+    for (int i = 0; i < bombeiro.vida; i++) // desenha um coração para cada vida do bombeiro
+    {
+        Rectangle origem = {0, 0, text.coracao.width, text.coracao.height};
+        Rectangle destino = {10 + (i * 30 + 10), 10, 40, 40};
+        DrawTexturePro(text.coracao, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+    }
+}
+/*===============================================================================
+
+                    FUNCOES PARA O PLACAR
+
+=================================================================================*/
 
 void RegistraPlacar(TIPO_PLACAR placar[], float tempoFinal, FILE *arq)
 {
@@ -442,6 +484,11 @@ void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
     }
 }
 
+/*================================================================
+
+                TELAS DE VITORIA/ DERROTA
+
+==================================================================*/
 int desenhaVitoria(void){
      // Drena todos os frames enquanto ENTER estiver pressionado
     while (!WindowShouldClose())
@@ -456,8 +503,8 @@ int desenhaVitoria(void){
     while(!WindowShouldClose()){
     BeginDrawing();
     ClearBackground(BLACK);
-    DrawText("Você Ganhou!", TAMANHO_HORIZONTAL/2 + 60, TAMANHO_VERTICAL/2 + 200, 100, WHITE);
-    DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL/2 + 110, TAMANHO_VERTICAL/2 + 300, 30, WHITE);
+    DrawText("Você Ganhou!", TAMANHO_HORIZONTAL/2 - (MeasureText("Você Ganhou!", 100)) / 2, TAMANHO_VERTICAL/2, 100, WHITE);
+    DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL/2 - (MeasureText("Pressione ENTER para continuar", 30)) / 2, TAMANHO_VERTICAL/2 + 150, 30, WHITE);
     EndDrawing();
     if(IsKeyPressed(KEY_ENTER)){
 
@@ -489,28 +536,4 @@ int desenhaDerrota(void){
     }
 }
     return 0;
-}
-void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual)
-{
-    if(faseAtual == 1)
-    {
-        carregaMapa("mapas/Mapa1.txt", m, bombeiro);
-    }
-    else if(faseAtual == 2)
-    {
-        carregaMapa("mapas/Mapa2.txt", m, bombeiro);
-    }
-    else if(faseAtual == 3)
-    {
-        carregaMapa("mapas/Mapa3.txt", m, bombeiro);
-    }
-}
-void desenhaCoracao(TexturasJogo text, Boneco bombeiro)
-{
-    for (int i = 0; i < bombeiro.vida; i++) // desenha um coração para cada vida do bombeiro
-    {
-        Rectangle origem = {0, 0, text.coracao.width, text.coracao.height};
-        Rectangle destino = {10 + (i * 30 + 10), 10, 40, 40};
-        DrawTexturePro(text.coracao, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
-    }
 }
