@@ -42,26 +42,25 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
 
         if (IsKeyDown('D') || IsKeyDown(KEY_RIGHT))
         {
-            if( x + 1 < MAPA_LARGURA && m[y][x + 1] != 'Z' && (m[y + 1][x] == 'Z' || bombeiro->estaPulando || m[y][x] == 'D'))
+                if(x + 1 < MAPA_LARGURA && (m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') && (m[y + 1][x + 1] == 'H' || m[y + 1][x + 1] == 'Z') || bombeiro->estaPulando)
                 {
                 bombeiro->posicao.x = x + 1;
                 bombeiro->tempoUltimoMovimento = tempoAtual;
                 x = x + 1;
                 }
         }
+        
 
         else if (IsKeyDown('A') || IsKeyDown(KEY_LEFT))
         {
-            if (x - 1 >= 0 && m[y][x - 1] != 'Z' && (m[y + 1][x] == 'Z' || bombeiro->estaPulando || m[y][x] == 'D'))
-            {// so deixa se nao for o fim do mapa, se o bloco de baixo for um chao ou uma escada ou se o personagem estiver pulando
-                if (m[y][x - 1] != 'Z')// bloqueia entrar em parede
+            if (x - 1 >= 0 && (m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') && (m[y + 1][x - 1] == 'H' || m[y + 1][x - 1] == 'Z'))
                 {
                     bombeiro->posicao.x = x - 1;
                     bombeiro->tempoUltimoMovimento = tempoAtual;
                     x = x - 1;
                 }
-            }
         }
+        
 
         if (!bombeiro->estaPulando &&(IsKeyDown('W') || IsKeyDown(KEY_UP)))
         {
@@ -92,7 +91,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
         bombeiro->tempoEspecial = GetTime();
         bombeiro->especial = true;
     }
-    if(GetTime() > bombeiro->tempoEspecial + 10){
+    if(GetTime() > bombeiro->tempoEspecial + 5){
         bombeiro->especial = false;
     }
 return 0;

@@ -26,6 +26,7 @@ typedef struct{
     Texture2D coracao;
     Texture2D menina;
     Texture2D moeda;
+    Texture2D molhado;
 } TexturasJogo; // define as texturas do jogo
 
 typedef struct{

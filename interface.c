@@ -128,7 +128,17 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
             }
         }
     }
-
+    if(bombeiro->especial){
+        Rectangle origemP = {0, 0, text.molhado.width, text.molhado.height};
+    Rectangle destinoP = {
+        comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
+        bombeiro->posicao.y * blocoTamanho, 
+        blocoTamanho, 
+        blocoTamanho
+    };
+    DrawTexturePro(text.molhado, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
+    }
+    else{
     Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
     Rectangle destinoP = {
         comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
@@ -137,6 +147,7 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
         blocoTamanho
     };
     DrawTexturePro(text.personagem, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
+}
 }
 
 void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro){
