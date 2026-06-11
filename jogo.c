@@ -25,6 +25,7 @@ int main()
     int retornoJogo = 0;
     int voltouPausa = 0;
     int retornoDerrota = 0;
+    int venceu = 0;
     char m[MAPA_ALTURA][MAPA_LARGURA];
     Boneco bombeiro;
     bombeiro.posicao.x = 0;
@@ -132,6 +133,7 @@ int main()
                             // Se venceu o mapa 3 (que agora é o último), vitória total!
                             printf("Parabens! Voce fechou o jogo inteiro!\n");
                             fimDeJogo = 1;
+                            venceu = 1;
                             tempoFinal = GetTime() - tempoInicio; // Calcula o tempo total do jogo
                         }
                     }
@@ -212,13 +214,15 @@ int main()
                     EndDrawing();
                 } // fim while loop do jogo
 
-                if (faseAtual == 3 && fimDeJogo)
+                if (faseAtual == 3 && fimDeJogo && venceu) 
                 {
                     retornoVitoria = desenhaVitoria();
                     if(retornoVitoria == 1){
                     
                     RegistraPlacar(placar, tempoFinal, arq);
                     imprimePlacar(placar);
+                    }else {
+                        desenhaPlacarNaTela(placar);
                     }
                 }
                 break;
