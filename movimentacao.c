@@ -42,7 +42,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
 
         if (IsKeyDown('D') || IsKeyDown(KEY_RIGHT))
         {
-                if(x + 1 < MAPA_LARGURA && (m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') && (m[y + 1][x + 1] == 'H' || m[y + 1][x + 1] == 'Z') || bombeiro->estaPulando)
+                if(x + 1 < MAPA_LARGURA && (((m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') && (m[y + 1][x + 1] == 'H' || m[y + 1][x + 1] == 'Z')) || (bombeiro->estaPulando && (m[y + 2][x+1] == 'Z' || m[y + 1][x+1] == 'Z' || m[y + 2][x+1] == 'H' || m[y + 1][x+1] == 'H'))))
                 {
                 bombeiro->posicao.x = x + 1;
                 bombeiro->tempoUltimoMovimento = tempoAtual;
@@ -53,7 +53,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
 
         else if (IsKeyDown('A') || IsKeyDown(KEY_LEFT))
         {
-            if (x - 1 >= 0 && (m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') && (m[y + 1][x - 1] == 'H' || m[y + 1][x - 1] == 'Z'))
+            if (x - 1 >= 0 && (((m[y + 1][x] == 'Z' || m[y + 1][x] == 'H') && (m[y + 1][x - 1] == 'H' || m[y + 1][x - 1] == 'Z')) || (bombeiro->estaPulando && (m[y + 2][x-1] == 'Z' || m[y + 1][x-1] == 'Z' || m[y + 2][x-1] == 'H' || m[y + 1][x-1] == 'H'))))
                 {
                     bombeiro->posicao.x = x - 1;
                     bombeiro->tempoUltimoMovimento = tempoAtual;
