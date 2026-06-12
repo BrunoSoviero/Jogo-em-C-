@@ -39,6 +39,7 @@ typedef struct{
     bool estaPulando;
     float tempoEspecial;
     bool especial;
+    float tempoUltimoPulo;
 } Boneco; 
 
 typedef struct {

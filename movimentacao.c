@@ -3,14 +3,10 @@
 int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
 {
     float tempoAtual = GetTime();
-    // TRAVA DE VELOCIDADE
-    //if (tempoAtual - bombeiro->tempoUltimoMovimento < bombeiro->velocidade){
-     //   return 0;
-    //}
     int x = bombeiro->posicao.x;
     int y = bombeiro-> posicao.y;
     bool podeAndar = (tempoAtual - bombeiro->tempoUltimoMovimento >= bombeiro->velocidade);
-    
+    bool podePular = (tempoAtual - bombeiro->tempoUltimoPulo >= bombeiro->velocidade + 0.15);
     if(bombeiro->estaPulando)
     {
         if (tempoAtual >= bombeiro->tempoInicioPulo + 0.35f)
@@ -20,6 +16,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
         }
         bombeiro->tempoUltimoMovimento = tempoAtual;
         bombeiro->estaPulando = false;
+         bombeiro->tempoUltimoPulo = tempoAtual;
         }
         else{
             bombeiro->posicao.y = y;
@@ -29,7 +26,7 @@ int movimentoPersonagem(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
     // se nao estiver pulando, pode  iniciar um novo pulo 
     else if(IsKeyDown(KEY_SPACE))
     {
-        if (y - 1 >= 0 && (m[y][x] == '.' || m[y][x] == 'S' || m[y][x] == 'D')) 
+        if (y - 1 >= 0 && (m[y][x] == '.' || m[y][x] == 'S' || m[y][x] == 'D') && podePular) 
         {
             bombeiro->estaPulando = true;
             bombeiro->tempoInicioPulo = tempoAtual;
