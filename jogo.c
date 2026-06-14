@@ -74,7 +74,6 @@ int main()
     }
     rewind(arq); // Volta para o início do arquivo para ler os placares existentes
     fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os placares existentes do arquivo
-    imprimePlacar(placar); // Imprime o placar atual no console
     
     while (!WindowShouldClose())
     {
@@ -223,7 +222,7 @@ int main()
                     if(retornoVitoria == 1){
                     
                     RegistraPlacar(placar, tempoFinal, arq);
-                    imprimePlacar(placar);
+                    
                     }else {
                         desenhaPlacarNaTela(placar);
                     }

@@ -78,11 +78,10 @@ void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseA
 // Funcoes para desenhar os mapas 
 void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro);
 void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro);
-
+void desenhaCoracao(TexturasJogo text, Boneco bombeiro);
 
 // Funcoes para o placar
 void RegistraPlacar(TIPO_PLACAR placar[], float tempo, FILE *arq);
-void imprimePlacar(TIPO_PLACAR placar[]);
 void desenhaPlacarNaTela(TIPO_PLACAR placar[]);
 
 // Funcoes para desenhar as telas de vutoria e derrota 
@@ -90,8 +89,5 @@ int desenhaVitoria(void);
 int desenhaDerrota(void);
 
 
-
-//Funcao para desenhar o coração
-void desenhaCoracao(TexturasJogo text, Boneco bombeiro);
 
 #endif

@@ -426,13 +426,6 @@ void RegistraPlacar(TIPO_PLACAR placar[], float tempoFinal, FILE *arq)
     desenhaPlacarNaTela(placar);
 }
 
-void imprimePlacar(TIPO_PLACAR placar[]){
-    for(int i = 0; i < 10; i++){
-        if(placar[i].nome[0] != '\0'){
-            printf("%d. %s - %d segundos\n", i+1, placar[i].nome, placar[i].time);
-        }
-    }
-}
 
 void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
     GetKeyPressed();
