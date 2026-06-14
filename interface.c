@@ -1,7 +1,6 @@
-#include "interface.h" 
+#include "interface.h"
 #include <stdio.h>
 #include <string.h>
-
 
 /*  =====================================================================================================
 
@@ -19,15 +18,16 @@ int Menu(void)
     Texture2D background = LoadTextureFromImage(imgFundo);
 
     Botao botaoStart, botaoScore, botaoExit;
-    float centroX = TAMANHO_HORIZONTAL / 3.0f; 
-    float escalaTela = (float)TAMANHO_HORIZONTAL/ 800.0f; // pega o valor do tamanho da tela e divide por 800 (valor original da tela)
+    float centroX = TAMANHO_HORIZONTAL / 3.0f;
+    float escalaTela = (float)TAMANHO_HORIZONTAL / 800.0f; // pega o valor do tamanho da tela e divide por 800 (valor original da tela)
     // Inicializacao dos botoes do menu
-    InitBotao(&botaoStart, "graficos/start.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.30f }, escalaTela);
-    InitBotao(&botaoScore, "graficos/score.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.50f }, escalaTela);
-    InitBotao(&botaoExit,  "graficos/exit.png",  (Vector2){ centroX, TAMANHO_VERTICAL * 0.70f }, escalaTela);
+    InitBotao(&botaoStart, "graficos/start.png", (Vector2){centroX, TAMANHO_VERTICAL * 0.30f}, escalaTela);
+    InitBotao(&botaoScore, "graficos/score.png", (Vector2){centroX, TAMANHO_VERTICAL * 0.50f}, escalaTela);
+    InitBotao(&botaoExit, "graficos/exit.png", (Vector2){centroX, TAMANHO_VERTICAL * 0.70f}, escalaTela);
     bool sair = false;
 
-    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) { // Debug para a volta do menu pausa
+    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+    { // Debug para a volta do menu pausa
         // equanto o mouse estiver abaixado, ele so desenha o menu sem verificar nenhum clique para nao pegar toques acidentais
         BeginDrawing();
         ClearBackground(BLACK);
@@ -38,12 +38,13 @@ int Menu(void)
         EndDrawing();
     }
 
-    while(WindowShouldClose() == false && sair == false)
+    while (WindowShouldClose() == false && sair == false)
     {
         Vector2 mousePosition = GetMousePosition();
         bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT); // verfica se o mouse esta pressionado
 
-        if(botaoPressionado(mousePosition, &botaoStart, mousePressed)){
+        if (botaoPressionado(mousePosition, &botaoStart, mousePressed))
+        {
             printf("StartButtonPressed");
             UnloadBotao(&botaoStart);
             UnloadBotao(&botaoScore);
@@ -51,7 +52,8 @@ int Menu(void)
             UnloadImage(imgFundo);
             return 0;
         }
-        if(botaoPressionado(mousePosition, &botaoScore, mousePressed)){
+        if (botaoPressionado(mousePosition, &botaoScore, mousePressed))
+        {
             printf("StartButtonPressed");
             UnloadBotao(&botaoStart);
             UnloadBotao(&botaoScore);
@@ -59,7 +61,8 @@ int Menu(void)
             UnloadImage(imgFundo);
             return 1;
         }
-        if(botaoPressionado(mousePosition, &botaoExit, mousePressed)){
+        if (botaoPressionado(mousePosition, &botaoExit, mousePressed))
+        {
             UnloadBotao(&botaoStart);
             UnloadBotao(&botaoScore);
             UnloadBotao(&botaoExit);
@@ -69,7 +72,7 @@ int Menu(void)
         BeginDrawing();
         ClearBackground(BLACK);
         DrawTexture(background, 0, 0, WHITE); // Desenha o fundo
-        desenhaBotao(&botaoStart); 
+        desenhaBotao(&botaoStart);
         desenhaBotao(&botaoScore);
         desenhaBotao(&botaoExit);
         // Isso vai desenhar uma linha vermelha exatamente onde o seu código acha que o botão está
@@ -84,12 +87,10 @@ int Menu(void)
     return 2;
 }
 
-
-
-void InitBotao(Botao* btn, const char* caminhoTextura, Vector2 pos, float scale)
+void InitBotao(Botao *btn, const char *caminhoTextura, Vector2 pos, float scale)
 {
     Image img = LoadImage(caminhoTextura);
-    
+
     int novaLargura = (int)(img.width * scale);
     int novaAltura = (int)(img.height * scale);
 
@@ -103,37 +104,41 @@ void InitBotao(Botao* btn, const char* caminhoTextura, Vector2 pos, float scale)
     btn->limites.y = pos.y;
     btn->limites.width = (float)btn->texturaBotao.width;
     btn->limites.height = (float)btn->texturaBotao.height;
-    
+
     btn->clicado = false;
 }
 
-void UnloadBotao(Botao* btn)
+void UnloadBotao(Botao *btn)
 {
     UnloadTexture(btn->texturaBotao);
 }
 
-void desenhaBotao(Botao* btn)
+void desenhaBotao(Botao *btn)
 {
     Vector2 mousePos = GetMousePosition();
     Color corBotao = WHITE; // Cor normal
 
     if (CheckCollisionPointRec(mousePos, btn->limites))
     {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) corBotao = GRAY; // Clicado
-        else corBotao = LIGHTGRAY; 
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            corBotao = GRAY; // Clicado
+        else
+            corBotao = LIGHTGRAY;
     }
 
     // Desenha a textura inteira, mas aplica o filtro de cor selecionado
     DrawTexture(btn->texturaBotao, btn->limites.x, btn->limites.y, corBotao);
-} 
+}
 
-bool botaoPressionado(Vector2 mousePos, Botao* btn, bool mousePressionado){
+bool botaoPressionado(Vector2 mousePos, Botao *btn, bool mousePressionado)
+{
     Rectangle rect = {btn->limites.x, btn->limites.y, (float)btn->texturaBotao.width, (float)btn->texturaBotao.height};
 
-    if (CheckCollisionPointRec(mousePos, rect) && mousePressionado){
+    if (CheckCollisionPointRec(mousePos, rect) && mousePressionado)
+    {
         return true;
     }
-    else    
+    else
         return false;
 }
 int MenuPausa(void)
@@ -145,16 +150,17 @@ int MenuPausa(void)
     Texture2D background = LoadTextureFromImage(imgFundo);
 
     Botao botaoContinue, botaoMenu, botaoExit;
-    float centroX = TAMANHO_HORIZONTAL / 3.0f; 
-    float escalaTela = (float)TAMANHO_HORIZONTAL/ 800.0f; // pega o valor do tamanho da tela e divide por 800 (valor original da tela)
+    float centroX = TAMANHO_HORIZONTAL / 3.0f;
+    float escalaTela = (float)TAMANHO_HORIZONTAL / 800.0f; // pega o valor do tamanho da tela e divide por 800 (valor original da tela)
     // Inicializacao dos botoes do menu
-    InitBotao(&botaoContinue, "graficos/continue.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.30f }, escalaTela);
-    InitBotao(&botaoMenu, "graficos/menu.png", (Vector2){ centroX, TAMANHO_VERTICAL * 0.50f }, escalaTela);
-    InitBotao(&botaoExit,  "graficos/exit.png",  (Vector2){ centroX, TAMANHO_VERTICAL * 0.70f }, escalaTela);
-     bool sair = false;
+    InitBotao(&botaoContinue, "graficos/continue.png", (Vector2){centroX, TAMANHO_VERTICAL * 0.30f}, escalaTela);
+    InitBotao(&botaoMenu, "graficos/menu.png", (Vector2){centroX, TAMANHO_VERTICAL * 0.50f}, escalaTela);
+    InitBotao(&botaoExit, "graficos/exit.png", (Vector2){centroX, TAMANHO_VERTICAL * 0.70f}, escalaTela);
+    bool sair = false;
 
-    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) { // Debug para quando clicar para voltar para o menu o clique nao pegar no menu principal
-    // enquanto o mouse estiver abaixado, ele so desenha o menu sem verificar nenhum clique para nao pegar toques acidentais
+    while (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+    {   // Debug para quando clicar para voltar para o menu o clique nao pegar no menu principal
+        // enquanto o mouse estiver abaixado, ele so desenha o menu sem verificar nenhum clique para nao pegar toques acidentais
         BeginDrawing();
         ClearBackground(BLACK);
         DrawTexture(background, 0, 0, WHITE);
@@ -164,12 +170,13 @@ int MenuPausa(void)
         EndDrawing();
     }
 
-    while(WindowShouldClose() == false && sair == false)
+    while (WindowShouldClose() == false && sair == false)
     {
         Vector2 mousePosition = GetMousePosition();
         bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT); // verfica se o mouse esta pressionado
 
-        if(botaoPressionado(mousePosition, &botaoContinue, mousePressed)){
+        if (botaoPressionado(mousePosition, &botaoContinue, mousePressed))
+        {
             printf("ContinueButtonPressed");
             UnloadBotao(&botaoContinue);
             UnloadBotao(&botaoMenu);
@@ -177,7 +184,8 @@ int MenuPausa(void)
             UnloadImage(imgFundo);
             return 0;
         }
-        if(botaoPressionado(mousePosition, &botaoMenu, mousePressed)){
+        if (botaoPressionado(mousePosition, &botaoMenu, mousePressed))
+        {
             printf("MenuButtonPressed");
             UnloadBotao(&botaoContinue);
             UnloadBotao(&botaoMenu);
@@ -185,7 +193,8 @@ int MenuPausa(void)
             UnloadImage(imgFundo);
             return 1;
         }
-        if(botaoPressionado(mousePosition, &botaoExit, mousePressed)){
+        if (botaoPressionado(mousePosition, &botaoExit, mousePressed))
+        {
             UnloadBotao(&botaoContinue);
             UnloadBotao(&botaoMenu);
             UnloadBotao(&botaoExit);
@@ -195,7 +204,7 @@ int MenuPausa(void)
         BeginDrawing();
         ClearBackground(BLACK);
         DrawTexture(background, 0, 0, WHITE); // Desenha o fundo
-        desenhaBotao(&botaoContinue); 
+        desenhaBotao(&botaoContinue);
         desenhaBotao(&botaoMenu);
         desenhaBotao(&botaoExit);
         // Isso vai desenhar uma linha vermelha exatamente onde o seu código acha que o botão está
@@ -216,26 +225,27 @@ int MenuPausa(void)
 ===============================================================================================*/
 
 // *** Cria o mapa para jogar o jogo
-void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* bombeiro){
+void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
+{
     int i, j;
     int x, y;
     // pega o tamanho da tela pra ajustar o mapa
     float larguraTela = GetScreenWidth();
     float alturaTela = GetScreenHeight();
     // ajusta o bloco pro tamamnho da tela
-    float blocoTamanhoH = alturaTela  / MAPA_ALTURA;
+    float blocoTamanhoH = alturaTela / MAPA_ALTURA;
     float blocoTamanhoV = larguraTela / MAPA_LARGURA;
-    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
-    float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho))/ 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
-    
+    float blocoTamanho = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
+    float comecoMapa = ((larguraTela - (MAPA_LARGURA * blocoTamanho)) / 2.0f); // remover o excesso pro mapa ficar um quadrado e dar espaco pro score e pra vida
+
     for (y = 0; y < MAPA_ALTURA; y++)
     {
         for (x = 0; x < MAPA_LARGURA; x++)
         {
             if (m[y][x] == 'Z') // Verifica se é uma plataforma e desenha a plataforma
             {
-                Rectangle origem = {0, 0, text.plataforma.width, text.plataforma.height}; // recorta o tamanho da imagem original
-                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho}; //posicao e o tamamnho que a imagem tera na tela
+                Rectangle origem = {0, 0, text.plataforma.width, text.plataforma.height};                            // recorta o tamanho da imagem original
+                Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho}; // posicao e o tamamnho que a imagem tera na tela
                 DrawTexturePro(text.plataforma, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
             }
             if (m[y][x] == 'H' || m[y][x] == 'S') // verifica se é uma escada e desenha a escada
@@ -250,7 +260,7 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
                 Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
                 DrawTexturePro(text.porta, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
             }
-             if (m[y][x] == 'L') // verifica se é uma porta e desenha a escada
+            if (m[y][x] == 'L') // verifica se é uma porta e desenha a escada
             {
                 Rectangle origem = {0, 0, text.menina.width, text.menina.height};
                 Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
@@ -260,55 +270,60 @@ void desenhaMapa(TexturasJogo text, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco* b
             {
                 Rectangle origem = {0, 0, text.moeda.width, text.moeda.height};
                 Rectangle destino = {comecoMapa + (x * blocoTamanho), y * blocoTamanho, blocoTamanho, blocoTamanho};
-                DrawTexturePro(text.moeda  , origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
+                DrawTexturePro(text.moeda, origem, destino, (Vector2){0, 0}, 0.0f, WHITE);
             }
         }
     }
-    if(bombeiro->especial){
+    if (bombeiro->especial)
+    {
         Rectangle origemP = {0, 0, text.molhado.width, text.molhado.height};
-    Rectangle destinoP = {
-        comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
-        bombeiro->posicao.y * blocoTamanho, 
-        blocoTamanho, 
-        blocoTamanho
-    };
-    DrawTexturePro(text.molhado, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
+        Rectangle destinoP = {
+            comecoMapa + (bombeiro->posicao.x * blocoTamanho),
+            bombeiro->posicao.y * blocoTamanho,
+            blocoTamanho,
+            blocoTamanho};
+        DrawTexturePro(text.molhado, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
     }
-    else{
-    Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
-    Rectangle destinoP = {
-        comecoMapa + (bombeiro->posicao.x * blocoTamanho), 
-        bombeiro->posicao.y * blocoTamanho, 
-        blocoTamanho, 
-        blocoTamanho
-    };
-    DrawTexturePro(text.personagem, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
-}
+    else
+    {
+        Rectangle origemP = {0, 0, text.personagem.width, text.personagem.height};
+        Rectangle destinoP = {
+            comecoMapa + (bombeiro->posicao.x * blocoTamanho),
+            bombeiro->posicao.y * blocoTamanho,
+            blocoTamanho,
+            blocoTamanho};
+        DrawTexturePro(text.personagem, origemP, destinoP, (Vector2){0, 0}, 0.0f, WHITE);
+    }
 }
 
-void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro){
-    
+void carregaMapa(const char *caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro)
+{
+
     FILE *arquivo = fopen(caminhoArquivo, "r");
 
-    char buffer[256]; 
+    char buffer[256];
     for (int i = 0; i < MAPA_ALTURA; i++) // LE O MAPA TXT
     {
-        if(fgets(buffer, sizeof(buffer), arquivo) == NULL) break;
-        
+        if (fgets(buffer, sizeof(buffer), arquivo) == NULL)
+            break;
+
         // Remove \n e \r
         buffer[strcspn(buffer, "\r\n")] = '\0';
-        
+
         // Copia só os primeiros MAPA_LARGURA caracteres pro mapa
         strncpy(m[i], buffer, MAPA_LARGURA);
         m[i][MAPA_LARGURA - 1] = '\0'; // garante terminação
     }
-    
-    for (int y = 0; y < MAPA_ALTURA; y++) {
-        for (int x = 0; x < MAPA_LARGURA; x++) {
-            if (m[y][x] == 'P') {
+
+    for (int y = 0; y < MAPA_ALTURA; y++)
+    {
+        for (int x = 0; x < MAPA_LARGURA; x++)
+        {
+            if (m[y][x] == 'P')
+            {
                 bombeiro->posicao.x = x;
                 bombeiro->posicao.y = y;
-                m[y][x] = '.'; 
+                m[y][x] = '.';
             }
         }
     }
@@ -317,15 +332,15 @@ void carregaMapa(const char* caminhoArquivo, char m[MAPA_ALTURA][MAPA_LARGURA], 
 
 void reiniciaFase(char m[MAPA_ALTURA][MAPA_LARGURA], Boneco *bombeiro, int faseAtual)
 {
-    if(faseAtual == 1)
+    if (faseAtual == 1)
     {
         carregaMapa("mapas/Mapa1.txt", m, bombeiro);
     }
-    else if(faseAtual == 2)
+    else if (faseAtual == 2)
     {
         carregaMapa("mapas/Mapa2.txt", m, bombeiro);
     }
-    else if(faseAtual == 3)
+    else if (faseAtual == 3)
     {
         carregaMapa("mapas/Mapa3.txt", m, bombeiro);
     }
@@ -350,95 +365,97 @@ void RegistraPlacar(TIPO_PLACAR placar[], float tempoFinal, FILE *arq)
 {
     char nome[20] = "\0";
     int contaLetra = 0;
-    
-    if(tempoFinal < placar[9].time){ // verifica se o tempo do jogador é melhor que o ultimo colocado no placar
-        
+
+    if (tempoFinal < placar[9].time)
+    { // verifica se o tempo do jogador é melhor que o ultimo colocado no placar
+
         while (IsKeyDown(KEY_ENTER)) // debug para nao pegar o enter da tela de vitoria
         {
             BeginDrawing();
             ClearBackground(BLACK);
             EndDrawing();
         }
-        while (GetCharPressed() > 0); // debug para esvaziar a fila de digitação
-        while(!IsKeyPressed(KEY_ENTER))
+        while (GetCharPressed() > 0)
+            ; // debug para esvaziar a fila de digitação
+        while (!IsKeyPressed(KEY_ENTER))
         {
             int caractere = GetCharPressed();
 
-            while(caractere>0 )
+            while (caractere > 0)
             {
-            if((caractere >= 32) && (caractere <= 126) && (contaLetra < 20))
-            {
-                nome[contaLetra] = (char)caractere;
-                contaLetra++;
-                nome[contaLetra] = '\0';
-            }
-            caractere = GetCharPressed();
+                if ((caractere >= 32) && (caractere <= 126) && (contaLetra < 20))
+                {
+                    nome[contaLetra] = (char)caractere;
+                    contaLetra++;
+                    nome[contaLetra] = '\0';
+                }
+                caractere = GetCharPressed();
             }
             if (IsKeyPressed(KEY_BACKSPACE))
             {
                 contaLetra--;
-                if (contaLetra < 0) 
+                if (contaLetra < 0)
                     contaLetra = 0;
                 nome[contaLetra] = '\0';
             }
-            
+
             BeginDrawing();
             ClearBackground(BLACK);
 
-            DrawText("Digite seu nome: ", TAMANHO_HORIZONTAL/2 - (MeasureText("Digite seu nome: ", 40) / 2), TAMANHO_VERTICAL/4, 40, WHITE);
-            DrawText(nome, TAMANHO_HORIZONTAL/2 - (MeasureText(nome, 35) / 2), TAMANHO_VERTICAL/4 + 60, 35, WHITE);
-            DrawText("Pressione ENTER para salvar", TAMANHO_HORIZONTAL/2 - (MeasureText("Pressione ENTER para salvar", 30) / 2), TAMANHO_VERTICAL/4 + 400, 30, WHITE);
+            DrawText("Digite seu nome: ", TAMANHO_HORIZONTAL / 2 - (MeasureText("Digite seu nome: ", 40) / 2), TAMANHO_VERTICAL / 4, 40, WHITE);
+            DrawText(nome, TAMANHO_HORIZONTAL / 2 - (MeasureText(nome, 35) / 2), TAMANHO_VERTICAL / 4 + 60, 35, WHITE);
+            DrawText("Pressione ENTER para salvar", TAMANHO_HORIZONTAL / 2 - (MeasureText("Pressione ENTER para salvar", 30) / 2), TAMANHO_VERTICAL / 4 + 400, 30, WHITE);
             EndDrawing();
         }
     }
     else
     {
-        while (IsKeyDown(KEY_ENTER)) 
+        while (IsKeyDown(KEY_ENTER))
         {
             BeginDrawing();
-                ClearBackground(BLACK);
+            ClearBackground(BLACK);
             EndDrawing();
         }
         desenhaPlacarNaTela(placar);
         return;
     }
-    for(int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++)
     {
-        if(tempoFinal < placar[i].time)
-        { 
-            for(int j = 9; j > i; j--)
+        if (tempoFinal < placar[i].time)
+        {
+            for (int j = 9; j > i; j--)
             {
-                placar[j] = placar[j-1];
+                placar[j] = placar[j - 1];
             }
-            strcpy(placar[i].nome, nome);  // copia o nome do jogador para a posição correta no placar
+            strcpy(placar[i].nome, nome); // copia o nome do jogador para a posição correta no placar
             placar[i].time = tempoFinal;
             break;
         }
     }
-    rewind(arq); // volta para o inicio do arquivo para sobrescrever os placares antigos
+    rewind(arq);                                  // volta para o inicio do arquivo para sobrescrever os placares antigos
     fwrite(placar, sizeof(TIPO_PLACAR), 10, arq); // escreve o placar atualizado no arquivo
-    while (IsKeyDown(KEY_ENTER)) 
-        {
-            BeginDrawing();
-                ClearBackground(BLACK);
-            EndDrawing();
-        }
+    while (IsKeyDown(KEY_ENTER))
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        EndDrawing();
+    }
     desenhaPlacarNaTela(placar);
 }
 
-
-void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
+void desenhaPlacarNaTela(TIPO_PLACAR placar[])
+{
     GetKeyPressed();
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(BLACK);
         EndDrawing();
-        
+
         if (!IsKeyDown(KEY_ENTER))
             break; // Só sai quando ENTER estiver completamente solto
     }
-    while(!WindowShouldClose() && !IsKeyPressed(KEY_ENTER) && !IsKeyPressed(KEY_ESCAPE))
+    while (!WindowShouldClose() && !IsKeyPressed(KEY_ENTER) && !IsKeyPressed(KEY_ESCAPE))
     {
         BeginDrawing();
         ClearBackground(BLACK);
@@ -448,29 +465,30 @@ void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
         // Margens fixas baseadas na largura de 800
         int margemEsquerdaX = 150; // Nomes começam no pixel 150
         int margemDireitaX = 630;  // Tempos terminam alinhados no
-       
+
         for (int i = 0; i < 10; i++)
         {
-                char textoPosicao[50];
-                char textoTempo[50];
-                int vazio = 0;
-                // Formata a string do nome com a posicao
-                sprintf(textoPosicao, "%02d. %s", i + 1, placar[i].nome[0] == '\0' ? "---" : placar[i].nome);
-                
-                if (placar[i].time == 9999) {
-                    sprintf(textoPosicao, "%02d. -----------------", i + 1);
-                    sprintf(textoTempo, "---");
-                    vazio = 1;
-                } else {
-                    sprintf(textoPosicao, "%02d. %s", i + 1, placar[i].nome);
-                    sprintf(textoTempo, "%.2f s", placar[i].time);
-                    vazio = 0;
-                }
+            char textoPosicao[50];
+            char textoTempo[50];
+            int vazio = 0;
+            // Formata a string do nome com a posicao
+            sprintf(textoPosicao, "%02d. %s", i + 1, placar[i].nome[0] == '\0' ? "---" : placar[i].nome);
 
-                
+            if (placar[i].time == 9999)
+            {
+                sprintf(textoPosicao, "%02d. -----------------", i + 1);
+                sprintf(textoTempo, "---");
+                vazio = 1;
+            }
+            else
+            {
+                sprintf(textoPosicao, "%02d. %s", i + 1, placar[i].nome);
+                sprintf(textoTempo, "%.2f s", placar[i].time);
+                vazio = 0;
+            }
 
-                DrawText(textoPosicao,  margemEsquerdaX, 130 + (i * 35), 22, RAYWHITE);
-                DrawText(textoTempo, margemDireitaX - MeasureText(textoTempo, 22), 130  + (i * 35), 22, RED);
+            DrawText(textoPosicao, margemEsquerdaX, 130 + (i * 35), 22, RAYWHITE);
+            DrawText(textoTempo, margemDireitaX - MeasureText(textoTempo, 22), 130 + (i * 35), 22, RED);
         }
         DrawText("Pressione ENTER para voltar ao Menu Principal", centroX - (MeasureText("Pressione ENTER para voltar ao Menu Principal", 16) / 2), TAMANHO_VERTICAL - 50, 16, GRAY);
         EndDrawing();
@@ -482,51 +500,57 @@ void desenhaPlacarNaTela(TIPO_PLACAR placar[]){
                 TELAS DE VITORIA/ DERROTA
 
 ==================================================================*/
-int desenhaVitoria(void){
-     // Drena todos os frames enquanto ENTER estiver pressionado
+int desenhaVitoria(void)
+{
+    // Drena todos os frames enquanto ENTER estiver pressionado
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(BLACK);
         EndDrawing();
-        
+
         if (!IsKeyDown(KEY_ENTER))
             break; // Só sai quando ENTER estiver completamente solto
     }
-    while(!WindowShouldClose()){
-    BeginDrawing();
-    ClearBackground(BLACK);
-    DrawText("Você Ganhou!", TAMANHO_HORIZONTAL/2 - (MeasureText("Você Ganhou!", 100)) / 2, TAMANHO_VERTICAL/2 - 50, 100, WHITE);
-    DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL/2 - (MeasureText("Pressione ENTER para continuar", 30)) / 2, TAMANHO_VERTICAL/2 + 50, 30, WHITE);
-    EndDrawing();
-    if(IsKeyPressed(KEY_ENTER)){
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText("Você Ganhou!", TAMANHO_HORIZONTAL / 2 - (MeasureText("Você Ganhou!", 100)) / 2, TAMANHO_VERTICAL / 2 - 50, 100, WHITE);
+        DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL / 2 - (MeasureText("Pressione ENTER para continuar", 30)) / 2, TAMANHO_VERTICAL / 2 + 50, 30, WHITE);
+        EndDrawing();
+        if (IsKeyPressed(KEY_ENTER))
+        {
 
-        return 1;
+            return 1;
+        }
     }
-}
     return 0;
 }
 
-int desenhaDerrota(void){
-     // Drena todos os frames enquanto ENTER estiver pressionado
+int desenhaDerrota(void)
+{
+    // Drena todos os frames enquanto ENTER estiver pressionado
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(BLACK);
         EndDrawing();
-        
+
         if (!IsKeyDown(KEY_ENTER))
             break; // Só sai quando ENTER estiver completamente solto
     }
-    while(!WindowShouldClose()){
-    BeginDrawing();
-    ClearBackground(BLACK);
-    DrawText("Você Perdeu!", TAMANHO_HORIZONTAL/2 - (MeasureText("Você Perdeu!", 100) / 2), TAMANHO_VERTICAL/2 - 100, 100, WHITE);
-    DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL/2 - (MeasureText("Pressione ENTER para continuar", 30) /2), TAMANHO_VERTICAL/2 + 50, 30, WHITE);
-    EndDrawing();
-    if(IsKeyPressed(KEY_ENTER)){
-        return 1;
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText("Você Perdeu!", TAMANHO_HORIZONTAL / 2 - (MeasureText("Você Perdeu!", 100) / 2), TAMANHO_VERTICAL / 2 - 100, 100, WHITE);
+        DrawText("Pressione ENTER para continuar", TAMANHO_HORIZONTAL / 2 - (MeasureText("Pressione ENTER para continuar", 30) / 2), TAMANHO_VERTICAL / 2 + 50, 30, WHITE);
+        EndDrawing();
+        if (IsKeyPressed(KEY_ENTER))
+        {
+            return 1;
+        }
     }
-}
     return 0;
 }

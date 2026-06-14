@@ -50,35 +50,35 @@ int main()
 
     // Cálculos para redimensionar os desenhos
     float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA;
-    float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
-    float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
-    
+    float blocoTamanhoV = (float)GetScreenWidth() / MAPA_LARGURA;
+    float blocoTamanho = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
+
     // Controle do tempo durante o jogo
     float tempoInicio, tempoFinal;
     TIPO_PLACAR placar[10];
     float tempoDecorrido;
     char textoTempo[50];
 
-    //INICIALIZA O FUNDO PARA O JOGO
+    // INICIALIZA O FUNDO PARA O JOGO
     Image imgFundo = LoadImage("graficos/fundo.png");
     ImageResize(&imgFundo, TAMANHO_HORIZONTAL, TAMANHO_VERTICAL);
     Texture2D background = LoadTextureFromImage(imgFundo);
-    
+
     FILE *arq = fopen("placar.bin", "rb+");
     if (arq == NULL) // abre o arquivo do placar
-    {   
+    {
         printf("Erro ao abrir o arquivo de placar.\n");
         return 1;
     }
-    
+
     for (int i = 0; i < 10; i++)
     {
-        placar[i].time = 9999; // Inicializa os tempos como 0
+        placar[i].time = 9999;      // Inicializa os tempos como 0
         strcpy(placar[i].nome, ""); // Inicializa os nomes como string vazia
     }
-    rewind(arq); // Volta para o início do arquivo para ler os placares existentes
+    rewind(arq);                                 // Volta para o início do arquivo para ler os placares existentes
     fread(placar, sizeof(TIPO_PLACAR), 10, arq); // Lê os placares existentes do arquivo
-    
+
     while (!WindowShouldClose())
     {
         if (!voltouPausa)
@@ -99,138 +99,141 @@ int main()
 
         switch (retornoMenu)
         {
-            case 0: // Se o botão de iniciar for pressionado começa o jogo
-                // atribui os valores iniciais para as variáveis do jogo
-                fimDeJogo = 0;
-                faseAtual = 1;
-                retornoJogo = 0;
-                bombeiro.posicao.x = 0;
-                bombeiro.posicao.y = 0;
-                bombeiro.velocidade = 0.075f;
-                bombeiro.vida = 3;
-                tempoPenalidade = 0.0f;
-                bombeiro.especial = false;
+        case 0: // Se o botão de iniciar for pressionado começa o jogo
+            // atribui os valores iniciais para as variáveis do jogo
+            fimDeJogo = 0;
+            faseAtual = 1;
+            retornoJogo = 0;
+            bombeiro.posicao.x = 0;
+            bombeiro.posicao.y = 0;
+            bombeiro.velocidade = 0.075f;
+            bombeiro.vida = 3;
+            tempoPenalidade = 0.0f;
+            bombeiro.especial = false;
 
-                //Carrega o mapa e os monstros
-                carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
-                initMonstro(monstros, &numMonstros, m, blocoTamanho);
-                tempoInicio = GetTime(); // Inicia o tempo do jogo
+            // Carrega o mapa e os monstros
+            carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
+            initMonstro(monstros, &numMonstros, m, blocoTamanho);
+            tempoInicio = GetTime(); // Inicia o tempo do jogo
 
-                while (retornoJogo == 0 && !fimDeJogo) // Loop do jogo (fase)
+            while (retornoJogo == 0 && !fimDeJogo) // Loop do jogo (fase)
+            {
+                retornoJogo = movimentoPersonagem(m, &bombeiro);
+                if (retornoJogo == 1) // passou de fase
                 {
-                    retornoJogo = movimentoPersonagem(m, &bombeiro);
-                    if (retornoJogo == 1) // passou de fase
+                    if (faseAtual == 1)
                     {
-                        if (faseAtual == 1)
+                        // avança para mapa 2
+                        carregaMapa("mapas/Mapa2.txt", m, &bombeiro);
+                        initMonstro(monstros, &numMonstros, m, blocoTamanho);
+                        faseAtual = 2;
+                        retornoJogo = 0; // reset pra continuar jogando no mesmo loop
+                    }
+                    else if (faseAtual == 2)
+                    {
+                        carregaMapa("mapas/Mapa3.txt", m, &bombeiro);
+                        initMonstro(monstros, &numMonstros, m, blocoTamanho);
+                        faseAtual = 3;
+                        retornoJogo = 0; // reseta de novo para continuar no loop
+                    }
+                    else if (faseAtual == 3) // Acabou o jogo
+                    {
+                        fimDeJogo = 1;
+                        venceu = 1;
+                        tempoFinal = (GetTime() - tempoInicio) + tempoPenalidade; // Calcula o tempo total do jogo
+                    }
+                }
+
+                if (!fimDeJogo)
+                {
+                    if (IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_P))
+                    {
+                        retornoPausa = MenuPausa();
+                        if (retornoPausa == 0)
                         {
-                            // avança para mapa 2
-                            carregaMapa("mapas/Mapa2.txt", m, &bombeiro);
-                            initMonstro(monstros, &numMonstros, m, blocoTamanho);
-                            faseAtual = 2;
-                            retornoJogo = 0; // reset pra continuar jogando no mesmo loop
+                            continue; // Volta para o jogo
                         }
-                        else if (faseAtual == 2)
+                        else if (retornoPausa == 1)
                         {
-                            carregaMapa("mapas/Mapa3.txt", m, &bombeiro);
-                            initMonstro(monstros, &numMonstros, m, blocoTamanho);
-                            faseAtual = 3;
-                            retornoJogo = 0; // reseta de novo para continuar no loop
+                            voltouPausa = 1;
+                            retornoJogo = -1;
+                            break; // Volta para o menu
                         }
-                        else if (faseAtual == 3) // Acabou o jogo
+                        else if (retornoPausa == 2)
+                        {
+                            fclose(arq);
+                            UnloadTexture(texturas.escada);
+                            UnloadTexture(texturas.plataforma);
+                            UnloadTexture(texturas.porta);
+                            UnloadTexture(texturas.personagem);
+                            UnloadTexture(texturas.monstro);
+                            CloseWindow(); // Sai do jogo
+                            return 0;
+                        }
+                    }
+                }
+
+                // Desenha o mapa e o monstro atualizado
+                BeginDrawing();
+                ClearBackground(BLACK);
+                DrawTexture(background, 0, 0, WHITE);
+                desenhaMapa(texturas, m, &bombeiro);
+                // Desenha o cronometro na tela
+                tempoDecorrido = (float)(GetTime() - tempoInicio) + tempoPenalidade;
+                sprintf(textoTempo, "%.2f s", tempoDecorrido);
+                int larguraTexto = MeasureText(textoTempo, 30); // MeasureText mede a largura do texto em pixels para alinhar à direita
+                DrawText(textoTempo, TAMANHO_HORIZONTAL - larguraTexto - 10, 10, 30, WHITE);
+                // Desenha os corações no canto da tela
+                desenhaCoracao(texturas, bombeiro);
+
+                for (int k = 0; k < numMonstros; k++)
+                { // atualiza as posições do monstro
+                    if (!atualizaMonstro(&monstros[k], m, texturas, &bombeiro))
+                    {
+                        continue;
+                    }
+                    else
+                    {                           // acertou o personagem
+                        if (bombeiro.vida == 1) // se acertou a ultima vida morreu
                         {
                             fimDeJogo = 1;
-                            venceu = 1;
-                            tempoFinal = (GetTime() - tempoInicio) + tempoPenalidade; // Calcula o tempo total do jogo
-                        }
-                    }
-
-                    if (!fimDeJogo)
-                    {
-                        if (IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_P))
-                        {
-                            retornoPausa = MenuPausa();
-                            if (retornoPausa == 0)
-                            {
-                                continue; // Volta para o jogo
-                            }
-                            else if (retornoPausa == 1)
-                            {
-                                voltouPausa = 1;
-                                retornoJogo = -1;
-                                break; // Volta para o menu
-                            }
-                            else if (retornoPausa == 2)
-                            {
-                                fclose(arq);
-                                UnloadTexture(texturas.escada);
-                                UnloadTexture(texturas.plataforma);
-                                UnloadTexture(texturas.porta);
-                                UnloadTexture(texturas.personagem);
-                                UnloadTexture(texturas.monstro);
-                                CloseWindow(); // Sai do jogo
-                                return 0;
-                            }
-                        }
-                    }
-
-                    // Desenha o mapa e o monstro atualizado
-                    BeginDrawing();
-                    ClearBackground(BLACK);
-                    DrawTexture(background, 0, 0, WHITE);
-                    desenhaMapa(texturas, m, &bombeiro);
-                    // Desenha o cronometro na tela 
-                    tempoDecorrido = (float)(GetTime() - tempoInicio) + tempoPenalidade;
-                    sprintf(textoTempo, "%.2f s", tempoDecorrido);
-                    int larguraTexto = MeasureText(textoTempo, 30); // MeasureText mede a largura do texto em pixels para alinhar à direita
-                    DrawText(textoTempo, TAMANHO_HORIZONTAL - larguraTexto - 10, 10, 30, WHITE);
-                    // Desenha os corações no canto da tela
-                    desenhaCoracao(texturas, bombeiro);
-
-                    for (int k = 0; k < numMonstros; k++)
-                    {// atualiza as posições do monstro
-                        if(!atualizaMonstro(&monstros[k], m, texturas, &bombeiro))
-                        {
-                            continue;
-                        }
-                        else
-                        {// acertou o personagem
-                            if(bombeiro.vida == 1)// se acertou a ultima vida morreu
+                            retornoDerrota = desenhaDerrota();
+                            if (retornoDerrota == 1)
                             {
                                 fimDeJogo = 1;
-                                retornoDerrota = desenhaDerrota();
-                                if(retornoDerrota == 1)
-                                {
-                                    fimDeJogo = 1;
-                                    desenhaPlacarNaTela(placar);
-                                    break;
-                                }
-                            }else// se possui mais vida reinicia a fase e inicializar os monstros
-                            {
-                                bombeiro.vida--;
-                                tempoPenalidade += 3.0;
-                                reiniciaFase(m, &bombeiro, faseAtual);
-                                initMonstro(monstros, &numMonstros, m, blocoTamanho);
+                                desenhaPlacarNaTela(placar);
                                 break;
                             }
                         }
-                    }
-                    EndDrawing();
-                } // fim while loop do jogo
-
-                if (faseAtual == 3 && fimDeJogo && venceu) 
-                {// ganhou
-                    retornoVitoria = desenhaVitoria();
-                    if(retornoVitoria == 1){
-                    // se necessario registra o placar
-                    RegistraPlacar(placar, tempoFinal, arq);
-                    
-                    }else {
-                        desenhaPlacarNaTela(placar);// exibe o placar
+                        else // se possui mais vida reinicia a fase e inicializar os monstros
+                        {
+                            bombeiro.vida--;
+                            tempoPenalidade += 3.0;
+                            reiniciaFase(m, &bombeiro, faseAtual);
+                            initMonstro(monstros, &numMonstros, m, blocoTamanho);
+                            break;
+                        }
                     }
                 }
-                break;
-                case 1: // se o retorno do menu quiser ver o placar
-                desenhaPlacarNaTela(placar);
+                EndDrawing();
+            } // fim while loop do jogo
+
+            if (faseAtual == 3 && fimDeJogo && venceu)
+            { // ganhou
+                retornoVitoria = desenhaVitoria();
+                if (retornoVitoria == 1)
+                {
+                    // se necessario registra o placar
+                    RegistraPlacar(placar, tempoFinal, arq);
+                }
+                else
+                {
+                    desenhaPlacarNaTela(placar); // exibe o placar
+                }
+            }
+            break;
+        case 1: // se o retorno do menu quiser ver o placar
+            desenhaPlacarNaTela(placar);
         } // fim switch
     } // fim while WindowShouldClose
     fclose(arq);
