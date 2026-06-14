@@ -19,6 +19,7 @@ int main()
     texturas.menina = LoadTexture("graficos/menina.png");
     texturas.moeda = LoadTexture("graficos/especial.png");
     texturas.molhado = LoadTexture("graficos/molhado.png");
+
     // Inicializa as variaveis para o funcinamento do jogo
     int retornoMenu;
     int retornoVitoria = 0;
@@ -33,40 +34,31 @@ int main()
     bombeiro.posicao.y = 0;
     bombeiro.velocidade = 0.15f;
     bombeiro.vida = 3;
-
     Monstro monstros[10];
     int numMonstros = 0;
-
     int fimDeJogo = 0;
     int faseAtual = 1;
-
     int retornoPausa = 0;
     float blocoTamanhoH = (float)GetScreenHeight() / MAPA_ALTURA;
     float blocoTamanhoV = (float)GetScreenWidth()  / MAPA_LARGURA;
     float blocoTamanho  = (blocoTamanhoH < blocoTamanhoV) ? blocoTamanhoH : blocoTamanhoV;
-
     float tempoInicio, tempoFinal;
     TIPO_PLACAR placar[10];
     float tempoDecorrido;
     char textoTempo[50];
 
+    //INICIALIZA O FUNDO PARA O JOGO
     Image imgFundo = LoadImage("graficos/fundo.png");
     ImageResize(&imgFundo, TAMANHO_HORIZONTAL, TAMANHO_VERTICAL);
     Texture2D background = LoadTextureFromImage(imgFundo);
     
     FILE *arq = fopen("placar.bin", "rb+");
-    if (arq == NULL)
+    if (arq == NULL) // abre o arquivo do placar
     {   
-        printf("Erro ao criar o arquivo de placar.\n");
+        printf("Erro ao abrir o arquivo de placar.\n");
         return 1;
     }
     
-    for (int i = 0; i < 10; i++)
-    {
-        placar[i].time = 9999; 
-        strcpy(placar[i].nome, ""); 
-    }
-
     for (int i = 0; i < 10; i++)
     {
         placar[i].time = 9999; // Inicializa os tempos como 0
@@ -79,12 +71,12 @@ int main()
     {
         if (!voltouPausa)
         {
-            retornoMenu = Menu();
+            retornoMenu = Menu(); // verifica o retorno da funcao menu
         }
         else
         {
             voltouPausa = 0;
-            continue; // ← pula o switch e volta pro topo do while, chamando Menu() na próxima iteração
+            continue; //  pula o switch e volta pro topo do while, chamando o menu
         }
         voltouPausa = 0;
 
@@ -105,6 +97,7 @@ int main()
                 bombeiro.velocidade = 0.075f;
                 bombeiro.vida = 3;
                 tempoPenalidade = 0.0f;
+                bombeiro.especial = false;
                 carregaMapa("mapas/Mapa1.txt", m, &bombeiro);
                 initMonstro(monstros, &numMonstros, m, blocoTamanho);
                 tempoInicio = GetTime(); // Inicia o tempo do jogo
@@ -131,19 +124,11 @@ int main()
                         }
                         else if (faseAtual == 3)
                         {
-                            // Se venceu o mapa 3 (que agora é o último), vitória total!
-                            printf("Parabens! Voce fechou o jogo inteiro!\n");
                             fimDeJogo = 1;
                             venceu = 1;
                             tempoFinal = (GetTime() - tempoInicio) + tempoPenalidade; // Calcula o tempo total do jogo
                         }
                     }
-                    //else if (retornoJogo == 2)
-                    //{
-                      //  retornoDerrota = desenhaDerrota();
-                       // printf("Voce Perdeu!\n");
-                        //fimDeJogo = 1; // Encerra o loop do jogo
-                    //}
 
                     if (!fimDeJogo)
                     {
