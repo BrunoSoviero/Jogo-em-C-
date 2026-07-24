@@ -207,7 +207,6 @@ int MenuPausa(void)
         desenhaBotao(&botaoContinue);
         desenhaBotao(&botaoMenu);
         desenhaBotao(&botaoExit);
-        // Isso vai desenhar uma linha vermelha exatamente onde o seu código acha que o botão está
         EndDrawing();
     }
     UnloadBotao(&botaoContinue);
