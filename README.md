@@ -10,5 +10,6 @@ Esse projeto de Bruno Soviero e Lucas Fonte foi elaborado para a disciplina de A
 
 ## Mecânica e objetivo do jogo
 
-O objetivo do jogo é, a partir da movimentação pelas teclas w, a, s, d ou as setas, desviar dos monstros e chegar na porta final. Além disso, o jogo contém mecânicas adicionais como pulo e invencibilidade.
+O objetivo do jogo é controlar o personagem utilizando as teclas **W, A, S e D** ou as **setas direcionais**, desviando dos monstros até alcançar a porta final. Além da movimentação, o jogo conta com mecânicas adicionais, como **pulo** e **invencibilidade**, que auxiliam o jogador durante a partida.
+
 
